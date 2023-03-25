@@ -6,6 +6,8 @@
 
 `홈 화면`
 
+## How to Execute
+
 ### `npm start`
 
 Visual Studio Code 등의 IDE에서 프로젝트를 실행한 후, `npm start`를 터미널에 입력합니다.
