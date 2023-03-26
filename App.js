@@ -1,10 +1,11 @@
+import { View } from 'react-native';
 import Home from './components/home';
 import Setting from './components/setting';
-import { View } from 'react-native';
+import Contact from './components/contact';
 
 export default function App() {
 
   return (
-    <Setting></Setting>
+    <Home></Home>
   );
 }

@@ -42,7 +42,7 @@ export default function Home() {
         <TouchableOpacity activeOpacity={0.6} style={styles.mainButton}>
           <Text style={styles.subText}>구호자</Text>
           <Text style={styles.Text}>연락처 관리</Text>
-          <Image style={styles.tinyImage} source={require('../assets/img/home/contact.png')}></Image>
+          <Image style={{...styles.tinyImage, marginTop: 32}} source={require('../assets/img/home/contact_config.png')}></Image>
         </TouchableOpacity>
 
       </View>
@@ -71,7 +71,7 @@ export default function Home() {
 
 
       <View style={styles.footer}>
-
+      
       </View>
     </View>
   );
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     padding: 22,
     paddingTop: 20,
     fontFamily: 'PretendardSemiBold',
-    backgroundColor: "#ff4a4a",
+    backgroundColor: "#5081F3",
     flex: 2,
     justifyContent: 'center',
   },
