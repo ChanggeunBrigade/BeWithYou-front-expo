@@ -8,7 +8,7 @@ import StyledTextInput from './StyledTextInput';
 import PhoneNumberInput from './PhoneNumperInput';
 import Button from './Button';
 
-export default function UserRegisterNumber() {
+export default function UserRegisterNumber({navigation}) {
 
     const [focus, setFocus] = useState(false);
     const [number, setNumber] = useState("");
@@ -49,9 +49,9 @@ export default function UserRegisterNumber() {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <View style={styles.container}>
         <StatusBar style="auto" />
-        <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.header}>
           <Ionicons name="arrow-back-outline" size={27} color="#343d4c" />
-        </View>
+        </TouchableOpacity>
             
         <View style={styles.section}>
           <Text style={{...styles.boldText, fontSize: 23}}>연락처를 입력해주세요</Text>
@@ -74,7 +74,7 @@ export default function UserRegisterNumber() {
                 ></TextInput>
             </View>
             <View style={styles.section}>
-                {enable ? <TouchableOpacity activeOpacity={0.8} style={{...styles.button}}>
+                {enable ? <TouchableOpacity onPress={() => navigation.navigate('userRegisterAddress')} activeOpacity={0.8} style={{...styles.button}}>
                     <Text style={{color: '#fff', fontFamily: 'PretendardMedium', fontSize: 18}}>다음</Text>
                     </TouchableOpacity> : ''}
             </View>

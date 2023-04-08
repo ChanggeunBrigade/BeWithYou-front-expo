@@ -1,12 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, BackHandler } from 'react-native';
 import * as Font from 'expo-font';
 import { lightTheme } from '../color';
 import { Ionicons, Fontisto } from '@expo/vector-icons'; 
 import { useState } from 'react';
 import ContactItem from './contactItem';
 
-export default function Contact() {
+export default function Contact({navigation}) {
 
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
@@ -26,9 +26,9 @@ export default function Contact() {
   return (
     <ScrollView style={styles.container}>
         <StatusBar style="auto" />
-        <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.header}>
           <Ionicons name="arrow-back-outline" size={27} color="#343d4c" />
-        </View>
+        </TouchableOpacity>
 
         <View style={styles.Profile}>        
           <View>

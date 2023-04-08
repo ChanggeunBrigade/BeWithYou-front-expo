@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, TextInput } from 'react-native';
 import * as Font from 'expo-font';
 
-export default function Button(props) {
+export default function Button(props, {navigation}) {
 
     const [loaded] = Font.useFonts({
         PretendardExtraBold : require('../assets/fonts/Pretendard-ExtraBold.ttf'),
@@ -16,7 +16,7 @@ export default function Button(props) {
     }
 
     return (
-        <TouchableOpacity  activeOpacity={0.8} style={styles.button}>
+        <TouchableOpacity activeOpacity={0.8} style={styles.button}>
             <Text style={{color: '#fff', fontFamily: 'PretendardMedium', fontSize: 18}}>{props.text}</Text>
         </TouchableOpacity>
     )

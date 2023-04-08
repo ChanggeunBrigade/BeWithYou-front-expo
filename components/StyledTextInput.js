@@ -51,10 +51,6 @@ export default function StyledTextInput(props) {
             </View>
 
             <View style={styles.section}>
-              {enable ? 
-              <TouchableOpacity activeOpacity={0.8} style={{...styles.button}}>
-              <Text style={{color: '#fff', fontFamily: 'PretendardMedium', fontSize: 18}}>다음</Text>
-              </TouchableOpacity> : ''}
             </View>
             
         </View>

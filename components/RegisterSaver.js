@@ -5,7 +5,7 @@ import { Ionicons, Fontisto } from '@expo/vector-icons';
 import { useState, useEffect } from 'react';
 import StyledTextInput from './StyledTextInput';
 
-export default function RegisterSaver() {
+export default function RegisterSaver({navigation}) {
 
   const [focus, setFocus] = useState(false);
   const [number, setNumber] = useState("");
@@ -46,9 +46,9 @@ export default function RegisterSaver() {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <View style={styles.container}>
         <StatusBar style="auto" />
-        <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.header}>
           <Ionicons name="arrow-back-outline" size={27} color="#343d4c" />
-        </View>
+        </TouchableOpacity>
             
         <View style={styles.section}>
           <Text style={{...styles.boldText, fontSize: 23}}>구호자를 등록해주세요</Text>

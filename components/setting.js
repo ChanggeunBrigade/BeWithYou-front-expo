@@ -5,7 +5,7 @@ import { lightTheme } from '../color';
 import { Ionicons, Fontisto } from '@expo/vector-icons'; 
 import { useState } from 'react';
 
-export default function Setting() {
+export default function Setting({navigation}) {
 
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
@@ -25,10 +25,10 @@ export default function Setting() {
   return (
     <View style={styles.container}>
         <StatusBar style="auto" />
-        <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.header}>
           <Ionicons name="arrow-back-outline" size={27} color="#343d4c" />
           <Text style={{...styles.Text, fontSize: 22}}>환경설정</Text>
-        </View>
+        </TouchableOpacity>
 
         <View style={styles.Profile}>
           <Image style={styles.profileImage} source={require('../assets/img/setting/profile.png')}></Image>
@@ -38,7 +38,7 @@ export default function Setting() {
             <Text style={{...styles.subText, fontSize: 12, marginLeft: 20, marginTop: 3}}>010-1234-8745</Text>
           </View>
 
-          <TouchableOpacity activeOpacity={0.8} style={styles.tinyButton}>
+          <TouchableOpacity onPress={() => navigation.navigate('UserInfo')} activeOpacity={0.8} style={styles.tinyButton}>
               <Text style={styles.subText}>내 정보 수정하기</Text>
           </TouchableOpacity>
         </View>

@@ -3,11 +3,24 @@ import { StyleSheet, Text, View, TouchableOpacity, TouchableWithoutFeedback, Key
 import * as Font from 'expo-font';
 import { lightTheme } from '../color';
 import { Ionicons, Fontisto } from '@expo/vector-icons'; 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import StyledTextInput from './StyledTextInput';
 import Button from './Button';
 
-export default function UserRegisterAddress() {
+export default function UserRegisterAddress({navigation}) {
+
+  const [number, setNumber] = useState("");
+  const [focus, setFocus] = useState(false);
+  const [enable, setEnable] = useState(false);
+
+  useEffect(() => {
+    if (number.length >= 5) {
+      setEnable(true)
+    } 
+    else {
+      setEnable(false);
+    }
+  }, [number]);
 
   const [loaded] = Font.useFonts({
     PretendardExtraBold : require('../assets/fonts/Pretendard-ExtraBold.ttf'),
@@ -25,14 +38,32 @@ export default function UserRegisterAddress() {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <View style={styles.container}>
         <StatusBar style="auto" />
-        <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.header}>
           <Ionicons name="arrow-back-outline" size={27} color="#343d4c" />
-        </View>
+        </TouchableOpacity>
             
         <View style={styles.section}>
           <Text style={{...styles.boldText, fontSize: 23}}>거주지 주소를 입력해주세요</Text>
-          <StyledTextInput label="주소"></StyledTextInput>
+          <View>
+                <Text style={
+                    focus ? styles.FocusFont : styles.BlurFont
+                }>주소</Text>
+                <TextInput 
+                    onChangeText={(text) => {
+                      setNumber(text)
+                    }}
+                    value={number}
+                    style={focus ? styles.inputOnFocus : styles.inputOnBlur}
+                    onFocus={() => setFocus(true)}
+                    onBlur={() => setFocus(false)}
+                ></TextInput>
+            </View>
         </View>
+
+        {enable ? 
+              <TouchableOpacity onPress={() => navigation.navigate('Home')} activeOpacity={0.8} style={{...styles.button}}>
+              <Text style={{color: '#fff', fontFamily: 'PretendardMedium', fontSize: 18}}>다음</Text>
+              </TouchableOpacity> : ''}
     </View>
     </TouchableWithoutFeedback>
   );
@@ -44,6 +75,40 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  FocusFont: {
+    fontFamily: 'PretendardRegular',
+    color: '#0090ff',
+    letterSpacing: -0.2,
+    paddingBottom: 2,
+    fontSize: 13, 
+    marginLeft: 5, 
+    marginRight: 10,
+    marginTop: 30,
+},
+BlurFont: {
+    fontFamily: 'PretendardRegular',
+    color: '#6a7684',
+    letterSpacing: -0.2,
+    paddingBottom: 2,
+    fontSize: 13, 
+    marginLeft: 5, 
+    marginRight: 10,
+    marginTop: 30,
+},
+inputOnFocus: {
+  fontFamily: 'PretendardRegular',
+  fontSize: 21,
+  borderBottomColor: '#0090ff',
+  borderBottomWidth: 2,
+  height: 42,
+},
+inputOnBlur: {
+    fontFamily: 'PretendardRegular',
+    fontSize: 21,
+    borderBottomColor: '#b6b6c0',
+    borderBottomWidth: 1,
+    height: 42,
+},
   button: {
     height: 60,
     marginBottom: 20,

@@ -6,10 +6,9 @@ import { Ionicons, Fontisto } from '@expo/vector-icons';
 import { useState } from 'react';
 import StyledTextInput from './StyledTextInput';
 import Button from './Button';
+import PhoneNumberInput from './PhoneNumperInput';
 
-export default function UserRegisterName({navigation}) {
-
-  
+export default function UserInfo({navigation}) {
 
   const [loaded] = Font.useFonts({
     PretendardExtraBold : require('../assets/fonts/Pretendard-ExtraBold.ttf'),
@@ -27,16 +26,17 @@ export default function UserRegisterName({navigation}) {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <View style={styles.container}>
         <StatusBar style="auto" />
+
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.header}>
+          <Ionicons name="arrow-back-outline" size={27} color="#343d4c" />
+          <Text style={{...styles.Text, fontSize: 22, color: '#343d4c'}}>사용자 정보 수정</Text>
+        </TouchableOpacity>
             
         <View style={styles.section}>
-          <Text style={{...styles.boldText, fontSize: 23, marginTop: 40, marginBottom: 20}}>이름을 입력해주세요</Text>
           <StyledTextInput label="이름"></StyledTextInput>
+          <StyledTextInput label="주소"></StyledTextInput>
+          <PhoneNumberInput label="연락처"></PhoneNumberInput>
         </View>
-
-        <TouchableOpacity onPress={() => navigation.navigate('userRegisterNumber')} activeOpacity={0.8} style={styles.button}>
-          <Text style={{color: '#fff', fontFamily: 'PretendardMedium', fontSize: 18}}>다음</Text>
-        </TouchableOpacity>
-
     </View>
     </TouchableWithoutFeedback>
   );
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: "row",
     marginTop: 45,
-    marginBottom: 20
+    marginBottom: 0
   },
   Profile: {
     backgroundColor: 'fff',
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   },
   section: {
     flex: 1,
-    marginTop: 15,
+    marginTop: 0,
     paddingVertical: 8,
     marginHorizontal: 20,
     borderRadius: 15

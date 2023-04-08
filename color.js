@@ -1,15 +1,13 @@
 export const darkTheme = {
-    background: "#101012",
-    btnColor: "#18171c",
+    bgColor: '#18171c',
+    grayBgColor: '#101012',
     mainTextColor: "#ffffff",
-    subTextColor: "#9f9ea4"
+    subTextColor: "#838383"
 }
 
 export const lightTheme = {
-    background: "#ffffff",
-    sectionBackground: "#f4f4f4",
-    btnDisabledColor: "#d0d0d0",
-    btnColor: "#f1f3f8",
+    bgColor: '#FFFFFF',
+    grayBgColor: '#f4f4f4',
     mainTextColor: "#343d4c",
     subTextColor: "#9f9ea4"
 }
