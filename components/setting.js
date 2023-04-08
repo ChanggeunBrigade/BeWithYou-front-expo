@@ -38,28 +38,28 @@ export default function Setting() {
             <Text style={{...styles.subText, fontSize: 12, marginLeft: 20, marginTop: 3}}>010-1234-8745</Text>
           </View>
 
-          <View style={styles.tinyButton}>
+          <TouchableOpacity activeOpacity={0.8} style={styles.tinyButton}>
               <Text style={styles.subText}>내 정보 수정하기</Text>
-          </View>
+          </TouchableOpacity>
         </View>
         
         <View style={styles.greySpace}>
         </View>
 
-        <View style={styles.buttonTab}>
+        <TouchableOpacity activeOpacity={0.5} style={styles.buttonTab}>
           <Text style={{...styles.Text, fontSize: 18, marginLeft: 5, paddingTop: 0}}>비상알림 시간 설정</Text>
           <Fontisto name="angle-right" size={12} color="#343d4c" styles={{flex: 1}} />
-        </View>
+        </TouchableOpacity>
 
-        <View style={styles.buttonTab}>
+        <TouchableOpacity activeOpacity={0.5} style={styles.buttonTab}>
           <Text style={{...styles.Text, fontSize: 18, marginLeft: 5, paddingTop: 0}}>알림메시지 설정</Text>
           <Fontisto name="angle-right" size={12} color="#343d4c" styles={{flex: 1}} />
-        </View>
+        </TouchableOpacity>
 
-        <View style={styles.buttonTab}>
+        <TouchableOpacity activeOpacity={0.5} style={styles.buttonTab}>
           <Text style={{...styles.Text, fontSize: 18, marginLeft: 5, paddingTop: 0}}>만성질환 추가</Text>
           <Fontisto name="angle-right" size={12} color="#343d4c" styles={{flex: 1}} />
-        </View>
+        </TouchableOpacity>
 
         <View style={styles.greySpace}>
         </View>

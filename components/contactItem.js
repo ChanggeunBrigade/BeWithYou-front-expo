@@ -3,13 +3,8 @@ import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView } from 'rea
 import * as Font from 'expo-font';
 import { lightTheme } from '../color';
 import { Ionicons, Fontisto } from '@expo/vector-icons'; 
-import { useState } from 'react';
-import ContactItem from './contactItem';
 
-export default function Contact() {
-
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+export default function ContactItem(props) {
 
   const [loaded] = Font.useFonts({
     PretendardExtraBold : require('../assets/fonts/Pretendard-ExtraBold.ttf'),
@@ -25,36 +20,19 @@ export default function Contact() {
 
   return (
     <ScrollView style={styles.container}>
-        <StatusBar style="auto" />
-        <View style={styles.header}>
-          <Ionicons name="arrow-back-outline" size={27} color="#343d4c" />
-        </View>
 
-        <View style={styles.Profile}>        
-          <View>
-            <Text style={{...styles.boldText, fontSize: 23}}>구호자 연락처 관리</Text>
-            <Text style={{
-                ...styles.subText,
-                fontSize: 13, 
-                marginLeft: 5, 
-                marginRight: 10,
-                marginTop: 10,
-                lineHeight: 20
-                }}>여기서 비상구호자들의 연락처를 관리할 수 있어요.
-            </Text>
-            <Text style={{
-                ...styles.subText,
-                fontSize: 13, 
-                marginLeft: 5, 
-                marginRight: 10,
-                lineHeight: 20
-                }}>연락처를 잘 확인하여 응급메시지가 잘 송신될 수 있도록 해주세요.
-            </Text>
-          </View>
-        </View>
+        <TouchableOpacity  style={styles.section}>
+            <Image style={styles.profileImage} source={require('../assets/img/setting/profile.png')}></Image>
+        
+            <View style={styles.profileName}>
+                <Text style={{...styles.boldText, marginLeft: 10}}>{props.name}</Text>
+                <Text style={{...styles.subText, fontSize: 13, marginLeft: 10, marginTop: 3}}>{props.phNum}</Text>
+            </View>
 
-        <ContactItem name="이창근" phNum="010-4201-2745"></ContactItem>
-        <ContactItem name="오승민" phNum="010-2042-3215"></ContactItem>
+            <Text style={{...styles.Text, fontSize: 14, marginRight: 10}}>수정</Text>
+
+            <Fontisto name="angle-right" size={11} color="#6a7684" styles={{marginRight: 100, paddingTop: 100}} />
+        </TouchableOpacity>
 
     </ScrollView>
   );

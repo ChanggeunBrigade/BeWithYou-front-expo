@@ -26,7 +26,7 @@ export default function Home() {
 
       <View style={styles.header}>
 
-        <TouchableOpacity activeOpacity={0.6}>
+        <TouchableOpacity activeOpacity={0.8}>
           <Text style={{...styles.mainLogoText}}>함께할게.</Text>
         </TouchableOpacity>
 
@@ -63,7 +63,7 @@ export default function Home() {
 
 
       <View style={styles.section2}>
-        <TouchableOpacity activeOpacity={0.6} style={styles.mainTestButton}>
+        <TouchableOpacity activeOpacity={0.8} style={styles.mainTestButton}>
             <Text style={{...styles.Text2}}>테스트 문자 발송</Text>
             <Text style={{...styles.subText2}}>대표 구호자 연락처로 테스트 문자를 발송합니다.</Text>
         </TouchableOpacity>
