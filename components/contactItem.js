@@ -1,10 +1,23 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, Appearance } from 'react-native';
 import * as Font from 'expo-font';
 import { lightTheme } from '../color';
 import { Ionicons, Fontisto } from '@expo/vector-icons'; 
+import { useEffect, useState } from 'react';
 
 export default function ContactItem(props) {
+
+  const colorScheme = Appearance.getColorScheme();
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    if (colorScheme === 'light') {
+      setIsDark(false);
+    }
+    if (colorScheme === 'dark') {
+      setIsDark(true);
+    }
+  }, []);
 
   const [loaded] = Font.useFonts({
     PretendardExtraBold : require('../assets/fonts/Pretendard-ExtraBold.ttf'),
@@ -18,18 +31,25 @@ export default function ContactItem(props) {
     return null;
   }
 
-  return (
-    <ScrollView style={styles.container}>
+  const themeMainTextStyle = isDark === false ? styles.lightMainText : styles.darkMainText;
+  const themeSubTextStyle = isDark === false ? styles.lightSubText : styles.darkSubText;
+  const themeSectionBgStyle = isDark === false ? styles.lightSectionBg : styles.darkSectionBg;
+  const themeContainerStyle = isDark === false ? styles.lightContainer : styles.darkContainer;
+  const themeBtnStyle = isDark === false ? styles.lightBtn : styles.darkBtn;
 
-        <TouchableOpacity  style={styles.section}>
-            <Image style={styles.profileImage} source={require('../assets/img/setting/profile.png')}></Image>
+  return (
+    <ScrollView style={[styles.container, themeContainerStyle]}>
+
+        <TouchableOpacity  style={[styles.section, themeBtnStyle]}>
+          {isDark ? <Image style={styles.profileImage} source={require('../assets/img/setting/profileDark.png')}></Image> : 
+          <Image style={styles.profileImage} source={require('../assets/img/setting/profile.png')}></Image>}
         
             <View style={styles.profileName}>
-                <Text style={{...styles.boldText, marginLeft: 10}}>{props.name}</Text>
-                <Text style={{...styles.subText, fontSize: 13, marginLeft: 10, marginTop: 3}}>{props.phNum}</Text>
+                <Text style={[{...styles.boldText, marginLeft: 10}, themeMainTextStyle]}>{props.name}</Text>
+                <Text style={[{...styles.subText, fontSize: 13, marginLeft: 10, marginTop: 3}, themeSubTextStyle]}>{props.phNum}</Text>
             </View>
 
-            <Text style={{...styles.Text, fontSize: 14, marginRight: 10}}>수정</Text>
+            <Text style={[{...styles.Text, fontSize: 14, marginRight: 10}, themeSubTextStyle]}>수정</Text>
 
             <Fontisto name="angle-right" size={11} color="#6a7684" styles={{marginRight: 100, paddingTop: 100}} />
         </TouchableOpacity>
@@ -121,5 +141,36 @@ const styles = StyleSheet.create({
   profileImage: {
     height: 60,
     width: 60
-  }
+  },
+
+  lightContainer: {
+    backgroundColor: '#ffffff',
+  },
+  darkContainer: {
+    backgroundColor: '#1f1d24',
+  },
+  lightSectionBg: {
+    backgroundColor: '#f4f4f4'
+  },
+  darkSectionBg: {
+    backgroundColor: '#101012'
+  },
+  lightBtn: {
+    backgroundColor: '#f1f3f8'
+  },
+  darkBtn: {
+    backgroundColor: '#2f3035'
+  },
+  lightMainText: {
+    color: '#343d4c'
+  },
+  darkMainText: {
+    color: '#ffffff'
+  },
+  lightSubText: {
+    color: '#343d4c',
+  },
+  darkSubText: {
+    color: '#c3c3c4',
+  },
 });

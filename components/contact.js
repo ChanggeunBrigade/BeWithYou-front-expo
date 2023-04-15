@@ -1,15 +1,32 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, BackHandler } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, BackHandler, Appearance } from 'react-native';
 import * as Font from 'expo-font';
 import { lightTheme } from '../color';
 import { Ionicons, Fontisto } from '@expo/vector-icons'; 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ContactItem from './contactItem';
 
 export default function Contact({navigation}) {
 
+  const colorScheme = Appearance.getColorScheme();
+  const [isDark, setIsDark] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
+  useEffect(() => {
+    if (colorScheme === 'light') {
+      setIsDark(false);
+    }
+    if (colorScheme === 'dark') {
+      setIsDark(true);
+    }
+  }, []);
+  
+  const themeMainTextStyle = isDark === false ? styles.lightMainText : styles.darkMainText;
+  const themeSubTextStyle = isDark === false ? styles.lightSubText : styles.darkSubText;
+  const themeSectionBgStyle = isDark === false ? styles.lightSectionBg : styles.darkSectionBg;
+  const themeContainerStyle = isDark === false ? styles.lightContainer : styles.darkContainer;
+  const themeBtnStyle = isDark === false ? styles.lightBtn : styles.darkBtn;
 
   const [loaded] = Font.useFonts({
     PretendardExtraBold : require('../assets/fonts/Pretendard-ExtraBold.ttf'),
@@ -24,31 +41,31 @@ export default function Contact({navigation}) {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={[styles.container, themeContainerStyle]}>
         <StatusBar style="auto" />
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.header}>
-          <Ionicons name="arrow-back-outline" size={27} color="#343d4c" />
+          <Ionicons name="arrow-back-outline" size={27} style={themeMainTextStyle} />
         </TouchableOpacity>
 
         <View style={styles.Profile}>        
           <View>
-            <Text style={{...styles.boldText, fontSize: 23}}>구호자 연락처 관리</Text>
-            <Text style={{
+            <Text style={[{...styles.boldText, fontSize: 23}, themeMainTextStyle]}>구호자 연락처 관리</Text>
+            <Text style={[{
                 ...styles.subText,
                 fontSize: 13, 
                 marginLeft: 5, 
                 marginRight: 10,
                 marginTop: 10,
                 lineHeight: 20
-                }}>여기서 비상구호자들의 연락처를 관리할 수 있어요.
+                }, themeSubTextStyle]}>여기서 비상구호자들의 연락처를 관리할 수 있어요.
             </Text>
-            <Text style={{
+            <Text style={[{
                 ...styles.subText,
                 fontSize: 13, 
                 marginLeft: 5, 
                 marginRight: 10,
                 lineHeight: 20
-                }}>연락처를 잘 확인하여 응급메시지가 잘 송신될 수 있도록 해주세요.
+                }, themeSubTextStyle]}>연락처를 잘 확인하여 응급메시지가 잘 송신될 수 있도록 해주세요.
             </Text>
           </View>
         </View>
@@ -143,5 +160,36 @@ const styles = StyleSheet.create({
   profileImage: {
     height: 60,
     width: 60
-  }
+  },
+
+  lightContainer: {
+    backgroundColor: '#ffffff',
+  },
+  darkContainer: {
+    backgroundColor: '#1f1d24',
+  },
+  lightSectionBg: {
+    backgroundColor: '#f4f4f4'
+  },
+  darkSectionBg: {
+    backgroundColor: '#101012'
+  },
+  lightBtn: {
+    backgroundColor: '#f1f3f8'
+  },
+  darkBtn: {
+    backgroundColor: '#2c2c34'
+  },
+  lightMainText: {
+    color: '#343d4c'
+  },
+  darkMainText: {
+    color: '#ffffff'
+  },
+  lightSubText: {
+    color: '#343d4c',
+  },
+  darkSubText: {
+    color: '#c3c3c4',
+  },
 });

@@ -4,16 +4,20 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Image,
+  ScrollView,
   TextInput,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Pressable,
   Appearance,
 } from "react-native";
 import * as Font from "expo-font";
-import { lightTheme } from "../color";
-import { Ionicons, Fontisto } from "@expo/vector-icons";
-import { useState, useEffect, SetStateAction } from "react";
-import Button from "./Button";
+import { Octicons } from "@expo/vector-icons";
+import { useState, useEffect } from "react";
+import Ambulance from "./animations/ambulance";
 
-export default function PhoneNumberInput(props) {
+export default function FirstSplash({ navigation }) {
   const colorScheme = Appearance.getColorScheme();
   const [isDark, setIsDark] = useState(false);
 
@@ -52,6 +56,7 @@ export default function PhoneNumberInput(props) {
   }, []);
 
   const [loaded] = Font.useFonts({
+    Malang: require("../assets/fonts/MalangmalangB.ttf"),
     PretendardExtraBold: require("../assets/fonts/Pretendard-ExtraBold.ttf"),
     PretendardSemiBold: require("../assets/fonts/Pretendard-SemiBold.ttf"),
     PretendardRegular: require("../assets/fonts/Pretendard-Regular.ttf"),
@@ -72,33 +77,44 @@ export default function PhoneNumberInput(props) {
   const themeContainerStyle =
     isDark === false ? styles.lightContainer : styles.darkContainer;
   const themeBtnStyle = isDark === false ? styles.lightBtn : styles.darkBtn;
+  const themeInputTextStyle =
+    isDark === false ? styles.lightTextInput : styles.darkTextInput;
 
   return (
-    <View style={[styles.container, themeContainerStyle]}>
-      <StatusBar style="auto" />
-      <View>
-        <Text
-          style={
-            focus ? styles.FocusFont : [styles.BlurFont, themeSubTextStyle]
-          }
-        >
-          {props.label}
-        </Text>
-        <TextInput
-          onChangeText={(text) => {
-            handlePress(text);
-            setNumber(text);
-          }}
-          value={number}
-          keyboardType="number-pad"
-          style={focus ? styles.inputOnFocus : styles.inputOnBlur}
-          onFocus={() => setFocus(true)}
-          onBlur={() => setFocus(false)}
-        ></TextInput>
-      </View>
-      <View style={styles.section}>
-        {enable ? (
-          <TouchableOpacity activeOpacity={0.8} style={{ ...styles.button }}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={[styles.container, themeContainerStyle]}>
+        <StatusBar style="auto" />
+
+        <View style={{ ...styles.section2, marginTop: 100 }}>
+          <Ambulance></Ambulance>
+          <Text
+            style={[
+              { ...styles.subText, fontSize: 15, marginTop: 75 },
+              themeSubTextStyle,
+            ]}
+          >
+            고독사 방지 앱 서비스
+          </Text>
+          <Text
+            style={[
+              {
+                ...styles.mainLogoText,
+                fontSize: 40,
+                marginTop: 5,
+                marginBottom: 10,
+              },
+              themeMainTextStyle,
+            ]}
+          >
+            함께할게.
+          </Text>
+        </View>
+        <View style={styles.section}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Permission")}
+            activeOpacity={0.8}
+            style={{ ...styles.button }}
+          >
             <Text
               style={{
                 color: "#fff",
@@ -106,35 +122,25 @@ export default function PhoneNumberInput(props) {
                 fontSize: 18,
               }}
             >
-              다음
+              시작하기
             </Text>
           </TouchableOpacity>
-        ) : (
-          ""
-        )}
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: "column",
+    flex: 1,
     backgroundColor: "#fff",
   },
-  section: {
-    flexDirection: "column-reverse",
-  },
-  button: {
-    flexDirection: "column-reverse",
-    height: 60,
-    backgroundColor: "#3182f7",
-    borderRadius: 15,
-    marginBottom: 10,
-    marginTop: 40,
-    alignItems: "center",
-    justifyContent: "center",
+  mainLogoText: {
+    fontFamily: "Malang",
+    fontSize: 25,
+    letterSpacing: -1,
   },
   FocusFont: {
     fontFamily: "PretendardRegular",
@@ -172,13 +178,21 @@ const styles = StyleSheet.create({
     height: 42,
     marginHorizontal: 5,
   },
+  button: {
+    height: 60,
+    marginBottom: 20,
+    backgroundColor: "#3182f7",
+    borderRadius: 15,
+    marginTop: 30,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   header: {
     backgroundColor: "fff",
     paddingHorizontal: 20,
     alignItems: "center",
     flexDirection: "row",
     marginTop: 45,
-    marginBottom: 20,
   },
   Profile: {
     backgroundColor: "fff",
@@ -187,6 +201,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: 15,
     marginBottom: 10,
+  },
+  section: {
+    paddingVertical: 8,
+    marginHorizontal: 20,
+    borderRadius: 15,
+  },
+  section2: {
+    flex: 1,
+    alignContent: "center",
+    alignItems: "center",
   },
   Text: {
     fontFamily: "PretendardMedium",
@@ -200,20 +224,15 @@ const styles = StyleSheet.create({
     fontSize: 17,
     letterSpacing: -0.4,
     paddingTop: 2,
-    marginLeft: 5,
     color: "#343d4c",
   },
   subText: {
-    fontFamily: "PretendardRegular",
+    fontFamily: "PretendardMedium",
+    fontSize: 10,
     color: "#6a7684",
     letterSpacing: -0.2,
     paddingBottom: 2,
-    fontSize: 13,
-    marginLeft: 5,
-    marginRight: 10,
-    marginTop: 50,
   },
-
   lightContainer: {
     backgroundColor: "#ffffff",
   },
@@ -239,9 +258,15 @@ const styles = StyleSheet.create({
     color: "#ffffff",
   },
   lightSubText: {
-    color: "#343d4c",
+    color: "#6a7684",
   },
   darkSubText: {
     color: "#c3c3c4",
+  },
+  lightTextInput: {
+    color: "#000000",
+  },
+  darkTextInput: {
+    color: "#ffffff",
   },
 });
