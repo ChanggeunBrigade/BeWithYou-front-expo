@@ -15,13 +15,15 @@ import { createStackNavigator } from "@react-navigation/stack";
 import CompleteRegister from "./components/completeRegister";
 import FirstSplash from "./components/firstSplash";
 import Permission from "./components/permission";
+import SetAlarmMessage from "./components/SetAlarmMessage";
+import SetEmergencyAlarm from "./components/SetEmergencyAlarm";
 
 export default function App() {
   const Stack = createStackNavigator();
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="UserRegisterName">
+      <Stack.Navigator initialRouteName="Home">
         <Stack.Screen
           options={{ headerShown: false }}
           name="firstSpalsh"
@@ -66,6 +68,16 @@ export default function App() {
           options={{ headerShown: false }}
           name="Setting"
           component={Setting}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="SetAlarmMessage"
+          component={SetAlarmMessage}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="SetEmergencyAlarm"
+          component={SetEmergencyAlarm}
         />
         <Stack.Screen
           options={{ headerShown: false }}

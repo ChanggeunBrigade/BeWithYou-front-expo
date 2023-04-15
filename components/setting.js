@@ -107,6 +107,7 @@ export default function Setting({ navigation }) {
       <View style={[styles.greySpace, themeSectionBgStyle]}></View>
 
       <TouchableOpacity
+        onPress={() => navigation.navigate("SetEmergencyAlarm")}
         activeOpacity={0.5}
         style={[styles.buttonTab, themeContainerStyle]}
       >
@@ -127,6 +128,7 @@ export default function Setting({ navigation }) {
       </TouchableOpacity>
 
       <TouchableOpacity
+        onPress={() => navigation.navigate("SetAlarmMessage")}
         activeOpacity={0.5}
         style={[styles.buttonTab, themeContainerStyle]}
       >
@@ -146,28 +148,6 @@ export default function Setting({ navigation }) {
         />
       </TouchableOpacity>
 
-      <TouchableOpacity
-        activeOpacity={0.5}
-        style={[styles.buttonTab, themeContainerStyle]}
-      >
-        <Text
-          style={[
-            { ...styles.Text, fontSize: 18, marginLeft: 5, paddingTop: 0 },
-            themeMainTextStyle,
-          ]}
-        >
-          만성질환 추가
-        </Text>
-        <Fontisto
-          name="angle-right"
-          size={12}
-          color="#343d4c"
-          styles={{ flex: 1 }}
-        />
-      </TouchableOpacity>
-
-      <View style={[styles.greySpace, themeSectionBgStyle]}></View>
-
       <View style={[styles.buttonTab, themeContainerStyle]}>
         <Text
           style={[
@@ -185,8 +165,6 @@ export default function Setting({ navigation }) {
           style={{ paddingVertical: 0, marginVertical: -20, marginRight: -5 }}
         />
       </View>
-
-      <View style={styles.greySpace}></View>
 
       <View style={styles.section}></View>
     </View>
