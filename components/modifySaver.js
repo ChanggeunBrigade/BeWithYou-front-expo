@@ -7,7 +7,6 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Appearance,
-  TextInput,
 } from "react-native";
 import * as Font from "expo-font";
 import { lightTheme } from "../color";
@@ -15,8 +14,9 @@ import { Ionicons, Fontisto } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
 import StyledTextInput from "./StyledTextInput";
 import Button from "./Button";
+import PhoneNumberInput from "./PhoneNumperInput";
 
-export default function UserRegisterAddress({ navigation }) {
+export default function ModifySaver({ navigation }) {
   const colorScheme = Appearance.getColorScheme();
   const [isDark, setIsDark] = useState(false);
 
@@ -41,18 +41,6 @@ export default function UserRegisterAddress({ navigation }) {
   const themeInputTextStyle =
     isDark === false ? styles.lightTextInput : styles.darkTextInput;
 
-  const [number, setNumber] = useState("");
-  const [focus, setFocus] = useState(false);
-  const [enable, setEnable] = useState(false);
-
-  useEffect(() => {
-    if (number.length >= 5) {
-      setEnable(true);
-    } else {
-      setEnable(false);
-    }
-  }, [number]);
-
   const [loaded] = Font.useFonts({
     PretendardExtraBold: require("../assets/fonts/Pretendard-ExtraBold.ttf"),
     PretendardSemiBold: require("../assets/fonts/Pretendard-SemiBold.ttf"),
@@ -69,6 +57,7 @@ export default function UserRegisterAddress({ navigation }) {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={[styles.container, themeContainerStyle]}>
         <StatusBar style="auto" />
+
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.header}
@@ -81,54 +70,9 @@ export default function UserRegisterAddress({ navigation }) {
         </TouchableOpacity>
 
         <View style={styles.section}>
-          <Text
-            style={[{ ...styles.boldText, fontSize: 23 }, themeMainTextStyle]}
-          >
-            거주지 주소를 입력해주세요
-          </Text>
-          <View>
-            <Text
-              style={
-                focus ? styles.FocusFont : [styles.BlurFont, themeSubTextStyle]
-              }
-            >
-              주소
-            </Text>
-            <TextInput
-              onChangeText={(text) => {
-                setNumber(text);
-              }}
-              value={number}
-              style={
-                focus
-                  ? [styles.inputOnFocus, themeInputTextStyle]
-                  : [styles.inputOnBlur, themeInputTextStyle]
-              }
-              onFocus={() => setFocus(true)}
-              onBlur={() => setFocus(false)}
-            ></TextInput>
-          </View>
+          <StyledTextInput label="이름"></StyledTextInput>
+          <PhoneNumberInput label="연락처"></PhoneNumberInput>
         </View>
-
-        {enable ? (
-          <TouchableOpacity
-            onPress={() => navigation.navigate("CompleteRegister")}
-            activeOpacity={0.8}
-            style={{ ...styles.button }}
-          >
-            <Text
-              style={{
-                color: "#fff",
-                fontFamily: "PretendardMedium",
-                fontSize: 18,
-              }}
-            >
-              다음
-            </Text>
-          </TouchableOpacity>
-        ) : (
-          ""
-        )}
       </View>
     </TouchableWithoutFeedback>
   );
@@ -139,40 +83,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     flex: 1,
     backgroundColor: "#fff",
-  },
-  FocusFont: {
-    fontFamily: "PretendardRegular",
-    color: "#0090ff",
-    letterSpacing: -0.2,
-    paddingBottom: 2,
-    fontSize: 13,
-    marginLeft: 5,
-    marginRight: 10,
-    marginTop: 30,
-  },
-  BlurFont: {
-    fontFamily: "PretendardRegular",
-    color: "#6a7684",
-    letterSpacing: -0.2,
-    paddingBottom: 2,
-    fontSize: 13,
-    marginLeft: 5,
-    marginRight: 10,
-    marginTop: 30,
-  },
-  inputOnFocus: {
-    fontFamily: "PretendardRegular",
-    fontSize: 21,
-    borderBottomColor: "#0090ff",
-    borderBottomWidth: 2,
-    height: 42,
-  },
-  inputOnBlur: {
-    fontFamily: "PretendardRegular",
-    fontSize: 21,
-    borderBottomColor: "#b6b6c0",
-    borderBottomWidth: 1,
-    height: 42,
   },
   button: {
     height: 60,
@@ -189,7 +99,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     marginTop: 45,
-    marginBottom: 20,
+    marginBottom: 0,
   },
   Profile: {
     backgroundColor: "fff",
@@ -260,10 +170,8 @@ const styles = StyleSheet.create({
   },
   lightTextInput: {
     color: "#000000",
-    marginHorizontal: 5,
   },
   darkTextInput: {
     color: "#ffffff",
-    marginHorizontal: 5,
   },
 });

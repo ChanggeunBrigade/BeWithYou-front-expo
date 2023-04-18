@@ -13,13 +13,13 @@ import * as Font from "expo-font";
 import { useState, useEffect } from "react";
 
 export default function UserRegisterName({ navigation }) {
-  const colorScheme = Appearance.getColorScheme();
   const [isDark, setIsDark] = useState(false);
   const [number, setNumber] = useState("");
   const [enable, setEnable] = useState(false);
   const [focus, setFocus] = useState(false);
 
   useEffect(() => {
+    const colorScheme = Appearance.getColorScheme();
     if (colorScheme === "light") {
       setIsDark(false);
     }
@@ -251,8 +251,10 @@ const styles = StyleSheet.create({
   },
   lightTextInput: {
     color: "#000000",
+    marginHorizontal: 5,
   },
   darkTextInput: {
     color: "#ffffff",
+    marginHorizontal: 5,
   },
 });

@@ -17,13 +17,15 @@ import FirstSplash from "./components/firstSplash";
 import Permission from "./components/permission";
 import SetAlarmMessage from "./components/SetAlarmMessage";
 import SetEmergencyAlarm from "./components/SetEmergencyAlarm";
+import ContactItem from "./components/contactItem";
+import ModifySaver from "./components/modifySaver";
 
 export default function App() {
   const Stack = createStackNavigator();
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator initialRouteName="firstSplash">
         <Stack.Screen
           options={{ headerShown: false }}
           name="firstSpalsh"
@@ -32,6 +34,7 @@ export default function App() {
         <Stack.Screen
           options={{ headerShown: false }}
           name="Permission"
+          ß
           component={Permission}
         />
         <Stack.Screen
@@ -88,6 +91,11 @@ export default function App() {
           options={{ headerShown: false }}
           name="UserInfo"
           component={UserInfo}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="ModifySaver"
+          component={ModifySaver}
         />
       </Stack.Navigator>
     </NavigationContainer>

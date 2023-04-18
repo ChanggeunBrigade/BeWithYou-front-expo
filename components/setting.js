@@ -72,12 +72,12 @@ export default function Setting({ navigation }) {
         {isDark ? (
           <Image
             style={styles.profileImage}
-            source={require("../assets/img/setting/profileDark.png")}
+            source={require("../assets/img/setting/profileDark2.png")}
           ></Image>
         ) : (
           <Image
             style={styles.profileImage}
-            source={require("../assets/img/setting/profile.png")}
+            source={require("../assets/img/setting/profile2.png")}
           ></Image>
         )}
 

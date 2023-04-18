@@ -24,11 +24,16 @@ export default function SetEmergencyAlarm({ navigation }) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
-    { label: "01:00", value: "apple" },
-    { label: "02:00", value: "banana" },
-    { label: "03:00", value: "banana2" },
-    { label: "04:00", value: "banana3" },
-    { label: "05:00", value: "banana4" },
+    { label: "3시간", value: "banana2" },
+    { label: "4시간", value: "banana3" },
+    { label: "5시간", value: "banana5" },
+    { label: "6시간", value: "banana6" },
+    { label: "7시간", value: "banana7" },
+    { label: "8시간", value: "banana8" },
+    { label: "9시간", value: "banana9" },
+    { label: "10시간", value: "banana10" },
+    { label: "11시간", value: "banana11" },
+    { label: "12시간", value: "banana12" },
   ]);
 
   useEffect(() => {
@@ -100,7 +105,7 @@ export default function SetEmergencyAlarm({ navigation }) {
               themeMainTextStyle,
             ]}
           >
-            선호하는 비상알람 시간대를
+            설정할 비상알람 시간 길이를
           </Text>
           <Text
             style={[
@@ -113,7 +118,7 @@ export default function SetEmergencyAlarm({ navigation }) {
               themeMainTextStyle,
             ]}
           >
-            설정해주세요
+            선택해주세요
           </Text>
           <Text
             style={
@@ -124,8 +129,9 @@ export default function SetEmergencyAlarm({ navigation }) {
           </Text>
 
           <DropDownPicker
+            listMode="MODAL"
             theme={isDark ? "DARK" : "LIGHT"}
-            placeholder="시간대 설정..."
+            placeholder="시간 설정..."
             open={open}
             value={value}
             items={items}
@@ -135,35 +141,35 @@ export default function SetEmergencyAlarm({ navigation }) {
             style={themeBtnStyle}
             textStyle={{
               fontFamily: "PretendardMedium",
-              fontSize: 15,
+              fontSize: 17,
               color: isDark ? "#ffffff" : "#343d4c",
             }}
             dropDownContainerStyle={{
               backgroundColor: isDark ? "#2c2c34" : "#f1f3f8",
               borderColor: isDark ? "#2c2c34" : "#f1f3f8",
             }}
+            modalAnimationType="slide"
+            modalContentContainerStyle={{
+              backgroundColor: isDark ? "#2c2c34" : "#f1f3f8",
+            }}
           />
         </View>
 
-        {enable ? (
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            activeOpacity={0.8}
-            style={{ ...styles.button }}
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          activeOpacity={0.8}
+          style={{ ...styles.button }}
+        >
+          <Text
+            style={{
+              color: "#fff",
+              fontFamily: "PretendardMedium",
+              fontSize: 18,
+            }}
           >
-            <Text
-              style={{
-                color: "#fff",
-                fontFamily: "PretendardMedium",
-                fontSize: 18,
-              }}
-            >
-              설정 완료
-            </Text>
-          </TouchableOpacity>
-        ) : (
-          ""
-        )}
+            설정 완료
+          </Text>
+        </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>
   );
