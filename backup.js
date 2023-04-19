@@ -1,26 +1,19 @@
-const colorScheme = Appearance.getColorScheme();
-const [isDark, setIsDark] = useState(false);
+import { ColorSchemeContext } from "../App";
+import { useContext } from "react";
 
-useEffect(() => {
-  if (colorScheme === "light") {
-    setIsDark(false);
-  }
-  if (colorScheme === "dark") {
-    setIsDark(true);
-  }
-}, []);
+const colorScheme = useContext(ColorSchemeContext);
 
-const themeMainTextStyle =
-  isDark === false ? styles.lightMainText : styles.darkMainText;
-const themeSubTextStyle =
-  isDark === false ? styles.lightSubText : styles.darkSubText;
-const themeSectionBgStyle =
-  isDark === false ? styles.lightSectionBg : styles.darkSectionBg;
-const themeContainerStyle =
-  isDark === false ? styles.lightContainer : styles.darkContainer;
-const themeBtnStyle = isDark === false ? styles.lightBtn : styles.darkBtn;
-const themeInputTextStyle =
-  isDark === false ? styles.lightTextInput : styles.darkTextInput;
+<View
+  style={[
+    colorScheme === "dark" ? styles.darkContainer : styles.lightContainer,
+
+    colorScheme === "dark" ? styles.darkMainText : styles.lightMainText,
+
+    colorScheme === "dark" ? styles.darkSubText : styles.lightSubText,
+
+    colorScheme === "dark" ? styles.darkTextInput : styles.lightTextInput,
+  ]}
+></View>;
 
 const styles = StyleSheet.create({
   lightContainer: {

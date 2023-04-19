@@ -10,24 +10,15 @@ import {
 } from "react-native";
 import * as Font from "expo-font";
 import { lightTheme } from "../color";
-import { Ionicons, Fontisto } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
+import { Fontisto } from "@expo/vector-icons";
+import { ColorSchemeContext } from "../App";
+import { useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
 
 export default function ContactItem(props) {
-  const colorScheme = Appearance.getColorScheme();
-  const [isDark, setIsDark] = useState(false);
+  const colorScheme = useContext(ColorSchemeContext);
 
   const navigation = useNavigation();
-
-  useEffect(() => {
-    if (colorScheme === "light") {
-      setIsDark(false);
-    }
-    if (colorScheme === "dark") {
-      setIsDark(true);
-    }
-  }, []);
 
   const [loaded] = Font.useFonts({
     PretendardExtraBold: require("../assets/fonts/Pretendard-ExtraBold.ttf"),
@@ -40,27 +31,24 @@ export default function ContactItem(props) {
   if (!loaded) {
     return null;
   }
-
-  const themeMainTextStyle =
-    isDark === false ? styles.lightMainText : styles.darkMainText;
-  const themeSubTextStyle =
-    isDark === false ? styles.lightSubText : styles.darkSubText;
-  const themeSectionBgStyle =
-    isDark === false ? styles.lightSectionBg : styles.darkSectionBg;
-  const themeContainerStyle =
-    isDark === false ? styles.lightContainer : styles.darkContainer;
-  const themeBtnStyle = isDark === false ? styles.lightBtn : styles.darkBtn;
-
   return (
-    <View style={[styles.container, themeContainerStyle]}>
+    <View
+      style={[
+        styles.container,
+        colorScheme === "dark" ? styles.darkContainer : styles.lightContainer,
+      ]}
+    >
       <TouchableOpacity
         onPress={() => {
           navigation.navigate("ModifySaver");
         }}
         activeOpacity={0.7}
-        style={[styles.section, themeBtnStyle]}
+        style={[
+          styles.section,
+          colorScheme === "dark" ? styles.darkBtn : styles.lightBtn,
+        ]}
       >
-        {isDark ? (
+        {colorScheme === "dark" ? (
           <Image
             style={styles.profileImage}
             source={require("../assets/img/setting/profileDark.png")}
@@ -74,14 +62,19 @@ export default function ContactItem(props) {
 
         <View style={styles.profileName}>
           <Text
-            style={[{ ...styles.boldText, marginLeft: 10 }, themeMainTextStyle]}
+            style={[
+              { ...styles.boldText, marginLeft: 10 },
+              colorScheme === "dark"
+                ? styles.darkMainText
+                : styles.lightMainText,
+            ]}
           >
             {props.name}
           </Text>
           <Text
             style={[
               { ...styles.subText, fontSize: 13, marginLeft: 10, marginTop: 3 },
-              themeSubTextStyle,
+              colorScheme === "dark" ? styles.darkSubText : styles.lightSubText,
             ]}
           >
             {props.phNum}
@@ -91,7 +84,7 @@ export default function ContactItem(props) {
         <Text
           style={[
             { ...styles.Text, fontSize: 14, marginRight: 10 },
-            themeSubTextStyle,
+            colorScheme === "dark" ? styles.darkSubText : styles.lightSubText,
           ]}
         >
           수정

@@ -4,41 +4,17 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Image,
   ScrollView,
-  BackHandler,
-  Appearance,
 } from "react-native";
 import * as Font from "expo-font";
 import { lightTheme } from "../color";
-import { Ionicons, Fontisto } from "@expo/vector-icons";
-import { useState, useEffect } from "react";
+import { Ionicons } from "@expo/vector-icons";
 import ContactItem from "./contactItem";
+import { ColorSchemeContext } from "../App";
+import { useContext } from "react";
 
 export default function Contact({ navigation }) {
-  const colorScheme = Appearance.getColorScheme();
-  const [isDark, setIsDark] = useState(false);
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
-
-  useEffect(() => {
-    if (colorScheme === "light") {
-      setIsDark(false);
-    }
-    if (colorScheme === "dark") {
-      setIsDark(true);
-    }
-  }, []);
-
-  const themeMainTextStyle =
-    isDark === false ? styles.lightMainText : styles.darkMainText;
-  const themeSubTextStyle =
-    isDark === false ? styles.lightSubText : styles.darkSubText;
-  const themeSectionBgStyle =
-    isDark === false ? styles.lightSectionBg : styles.darkSectionBg;
-  const themeContainerStyle =
-    isDark === false ? styles.lightContainer : styles.darkContainer;
-  const themeBtnStyle = isDark === false ? styles.lightBtn : styles.darkBtn;
+  const colorScheme = useContext(ColorSchemeContext);
 
   const [loaded] = Font.useFonts({
     PretendardExtraBold: require("../assets/fonts/Pretendard-ExtraBold.ttf"),
@@ -53,7 +29,12 @@ export default function Contact({ navigation }) {
   }
 
   return (
-    <ScrollView style={[styles.container, themeContainerStyle]}>
+    <ScrollView
+      style={[
+        styles.container,
+        colorScheme === "dark" ? styles.darkContainer : styles.lightContainer,
+      ]}
+    >
       <StatusBar style="auto" />
       <TouchableOpacity
         onPress={() => navigation.goBack()}
@@ -62,14 +43,21 @@ export default function Contact({ navigation }) {
         <Ionicons
           name="arrow-back-outline"
           size={27}
-          style={themeMainTextStyle}
+          style={
+            colorScheme === "dark" ? styles.darkMainText : styles.lightMainText
+          }
         />
       </TouchableOpacity>
 
       <View style={styles.Profile}>
         <View>
           <Text
-            style={[{ ...styles.boldText, fontSize: 23 }, themeMainTextStyle]}
+            style={[
+              { ...styles.boldText, fontSize: 23 },
+              colorScheme === "dark"
+                ? styles.darkMainText
+                : styles.lightMainText,
+            ]}
           >
             구호자 연락처 관리
           </Text>
@@ -83,7 +71,7 @@ export default function Contact({ navigation }) {
                 marginTop: 10,
                 lineHeight: 20,
               },
-              themeSubTextStyle,
+              colorScheme === "dark" ? styles.darkSubText : styles.lightSubText,
             ]}
           >
             여기서 비상구호자들의 연락처를 관리할 수 있어요.
@@ -97,7 +85,7 @@ export default function Contact({ navigation }) {
                 marginRight: 10,
                 lineHeight: 20,
               },
-              themeSubTextStyle,
+              colorScheme === "dark" ? styles.darkSubText : styles.lightSubText,
             ]}
           >
             연락처를 잘 확인하여 응급메시지가 잘 송신될 수 있도록 해주세요.

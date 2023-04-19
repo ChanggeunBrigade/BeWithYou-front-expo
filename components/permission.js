@@ -6,37 +6,14 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
-  Appearance,
 } from "react-native";
 import * as Font from "expo-font";
-import { lightTheme } from "../color";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useState, useEffect } from "react";
-import StyledTextInput from "./StyledTextInput";
-import Button from "./Button";
+import { ColorSchemeContext } from "../App";
+import { useContext } from "react";
 
 export default function Permission({ navigation }) {
-  const colorScheme = Appearance.getColorScheme();
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    if (colorScheme === "light") {
-      setIsDark(false);
-    }
-    if (colorScheme === "dark") {
-      setIsDark(true);
-    }
-  }, []);
-
-  const themeMainTextStyle =
-    isDark === false ? styles.lightMainText : styles.darkMainText;
-  const themeSubTextStyle =
-    isDark === false ? styles.lightSubText : styles.darkSubText;
-  const themeSectionBgStyle =
-    isDark === false ? styles.lightSectionBg : styles.darkSectionBg;
-  const themeContainerStyle =
-    isDark === false ? styles.lightContainer : styles.darkContainer;
-  const themeIconStyle = isDark === false ? styles.lightIcon : styles.darkIcon;
+  const colorScheme = useContext(ColorSchemeContext);
 
   const [loaded] = Font.useFonts({
     PretendardExtraBold: require("../assets/fonts/Pretendard-ExtraBold.ttf"),
@@ -52,7 +29,12 @@ export default function Permission({ navigation }) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={[styles.container, themeContainerStyle]}>
+      <View
+        style={[
+          styles.container,
+          colorScheme === "dark" ? styles.darkContainer : styles.lightContainer,
+        ]}
+      >
         <StatusBar style="auto" />
 
         <View style={styles.section}>
@@ -64,7 +46,9 @@ export default function Permission({ navigation }) {
                 marginTop: 40,
                 marginBottom: 5,
               },
-              themeMainTextStyle,
+              colorScheme === "dark"
+                ? styles.darkMainText
+                : styles.lightMainText,
             ]}
           >
             앱 사용을 위해 권한을 허락해주세요
@@ -76,7 +60,9 @@ export default function Permission({ navigation }) {
                 fontSize: 23,
                 marginBottom: 20,
               },
-              themeMainTextStyle,
+              colorScheme === "dark"
+                ? styles.darkMainText
+                : styles.lightMainText,
             ]}
           >
             꼭 필요한 권한만 받아요
@@ -95,7 +81,9 @@ export default function Permission({ navigation }) {
                   fontSize: 18,
                   marginBottom: 5,
                 },
-                themeSubTextStyle,
+                colorScheme === "dark"
+                  ? styles.darkSubText
+                  : styles.lightSubText,
               ]}
             >
               SMS 발송
@@ -106,7 +94,9 @@ export default function Permission({ navigation }) {
                   ...styles.Text,
                   fontSize: 12,
                 },
-                themeSubTextStyle,
+                colorScheme === "dark"
+                  ? styles.darkSubText
+                  : styles.lightSubText,
               ]}
             >
               일정시간 휴대전화의 사용이 없을 시 저장된 긴급 구호자에게로 문자를
@@ -127,7 +117,9 @@ export default function Permission({ navigation }) {
                   fontSize: 18,
                   marginBottom: 5,
                 },
-                themeSubTextStyle,
+                colorScheme === "dark"
+                  ? styles.darkSubText
+                  : styles.lightSubText,
               ]}
             >
               위치 정보
@@ -138,7 +130,9 @@ export default function Permission({ navigation }) {
                   ...styles.Text,
                   fontSize: 12,
                 },
-                themeSubTextStyle,
+                colorScheme === "dark"
+                  ? styles.darkSubText
+                  : styles.lightSubText,
               ]}
             >
               일정시간 휴대전화의 사용이 없을 시 저장된 긴급 구호자에게로 현재
@@ -159,7 +153,9 @@ export default function Permission({ navigation }) {
                   fontSize: 18,
                   marginBottom: 5,
                 },
-                themeSubTextStyle,
+                colorScheme === "dark"
+                  ? styles.darkSubText
+                  : styles.lightSubText,
               ]}
             >
               방해금지 권한 (권장하지 않아요)
@@ -170,7 +166,9 @@ export default function Permission({ navigation }) {
                   ...styles.Text,
                   fontSize: 12,
                 },
-                themeSubTextStyle,
+                colorScheme === "dark"
+                  ? styles.darkSubText
+                  : styles.lightSubText,
               ]}
             >
               외부에서 업무나 개인사정으로 인하여 일정시간 이상 휴대전화의

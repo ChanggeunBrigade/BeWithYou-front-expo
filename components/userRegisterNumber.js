@@ -7,40 +7,18 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
-  Appearance,
 } from "react-native";
 import * as Font from "expo-font";
-import { lightTheme } from "../color";
-import { Ionicons, Fontisto } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
+import { ColorSchemeContext } from "../App";
+import { useContext } from "react";
 import StyledTextInput from "./StyledTextInput";
 import PhoneNumberInput from "./PhoneNumperInput";
 import Button from "./Button";
 
 export default function UserRegisterNumber({ navigation }) {
-  const colorScheme = Appearance.getColorScheme();
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    if (colorScheme === "light") {
-      setIsDark(false);
-    }
-    if (colorScheme === "dark") {
-      setIsDark(true);
-    }
-  }, []);
-
-  const themeMainTextStyle =
-    isDark === false ? styles.lightMainText : styles.darkMainText;
-  const themeSubTextStyle =
-    isDark === false ? styles.lightSubText : styles.darkSubText;
-  const themeSectionBgStyle =
-    isDark === false ? styles.lightSectionBg : styles.darkSectionBg;
-  const themeContainerStyle =
-    isDark === false ? styles.lightContainer : styles.darkContainer;
-  const themeBtnStyle = isDark === false ? styles.lightBtn : styles.darkBtn;
-  const themeInputTextStyle =
-    isDark === false ? styles.lightTextInput : styles.darkTextInput;
+  const colorScheme = useContext(ColorSchemeContext);
 
   const [focus, setFocus] = useState(false);
   const [number, setNumber] = useState("");
@@ -81,7 +59,12 @@ export default function UserRegisterNumber({ navigation }) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={[styles.container, themeContainerStyle]}>
+      <View
+        style={[
+          styles.container,
+          colorScheme === "dark" ? styles.darkContainer : styles.lightContainer,
+        ]}
+      >
         <StatusBar style="auto" />
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -90,13 +73,22 @@ export default function UserRegisterNumber({ navigation }) {
           <Ionicons
             name="arrow-back-outline"
             size={27}
-            style={themeMainTextStyle}
+            style={
+              colorScheme === "dark"
+                ? styles.darkMainText
+                : styles.lightMainText
+            }
           />
         </TouchableOpacity>
 
         <View style={styles.section}>
           <Text
-            style={[{ ...styles.boldText, fontSize: 23 }, themeMainTextStyle]}
+            style={[
+              { ...styles.boldText, fontSize: 23 },
+              colorScheme === "dark"
+                ? styles.darkMainText
+                : styles.lightMainText,
+            ]}
           >
             연락처를 입력해주세요
           </Text>
@@ -105,7 +97,14 @@ export default function UserRegisterNumber({ navigation }) {
         <View style={{ marginHorizontal: 20 }}>
           <Text
             style={
-              focus ? styles.FocusFont : [styles.BlurFont, themeSubTextStyle]
+              focus
+                ? styles.FocusFont
+                : [
+                    styles.BlurFont,
+                    colorScheme === "dark"
+                      ? styles.darkMainText
+                      : styles.lightMainText,
+                  ]
             }
           >
             연락처
@@ -119,8 +118,18 @@ export default function UserRegisterNumber({ navigation }) {
             keyboardType="number-pad"
             style={
               focus
-                ? [styles.inputOnFocus, themeInputTextStyle]
-                : [styles.inputOnBlur, themeInputTextStyle]
+                ? [
+                    styles.inputOnFocus,
+                    colorScheme === "dark"
+                      ? styles.darkTextInput
+                      : styles.lightTextInput,
+                  ]
+                : [
+                    styles.inputOnBlur,
+                    colorScheme === "dark"
+                      ? styles.darkTextInput
+                      : styles.lightTextInput,
+                  ]
             }
             onFocus={() => setFocus(true)}
             onBlur={() => setFocus(false)}

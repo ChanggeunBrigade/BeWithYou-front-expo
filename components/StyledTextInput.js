@@ -1,22 +1,11 @@
 import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  TextInput,
-  Appearance,
-} from "react-native";
+import { StyleSheet, Text, View, TextInput } from "react-native";
 import * as Font from "expo-font";
-import { lightTheme } from "../color";
-import { Ionicons, Fontisto } from "@expo/vector-icons";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { ColorSchemeContext } from "../App";
 
 export default function StyledTextInput(props) {
-  const colorScheme = Appearance.getColorScheme();
-  const [isDark, setIsDark] = useState(false);
+  const colorScheme = useContext(ColorSchemeContext);
 
   const [number, setNumber] = useState("");
   const [focus, setFocus] = useState(false);
@@ -30,15 +19,6 @@ export default function StyledTextInput(props) {
     }
   }, [number]);
 
-  useEffect(() => {
-    if (colorScheme === "light") {
-      setIsDark(false);
-    }
-    if (colorScheme === "dark") {
-      setIsDark(true);
-    }
-  }, []);
-
   const [loaded] = Font.useFonts({
     PretendardExtraBold: require("../assets/fonts/Pretendard-ExtraBold.ttf"),
     PretendardSemiBold: require("../assets/fonts/Pretendard-SemiBold.ttf"),
@@ -51,25 +31,25 @@ export default function StyledTextInput(props) {
     return null;
   }
 
-  const themeMainTextStyle =
-    isDark === false ? styles.lightMainText : styles.darkMainText;
-  const themeSubTextStyle =
-    isDark === false ? styles.lightSubText : styles.darkSubText;
-  const themeSectionBgStyle =
-    isDark === false ? styles.lightSectionBg : styles.darkSectionBg;
-  const themeContainerStyle =
-    isDark === false ? styles.lightContainer : styles.darkContainer;
-  const themeBtnStyle = isDark === false ? styles.lightBtn : styles.darkBtn;
-  const themeInputTextStyle =
-    isDark === false ? styles.lightTextInput : styles.darkTextInput;
-
   return (
-    <View style={[styles.container, themeContainerStyle]}>
+    <View
+      style={[
+        styles.container,
+        colorScheme === "dark" ? styles.darkContainer : styles.lightContainer,
+      ]}
+    >
       <StatusBar style="auto" />
       <View style={styles.section}>
         <Text
           style={
-            focus ? styles.FocusFont : [styles.BlurFont, themeSubTextStyle]
+            focus
+              ? styles.FocusFont
+              : [
+                  styles.BlurFont,
+                  colorScheme === "dark"
+                    ? styles.darkSubText
+                    : styles.lightSubText,
+                ]
           }
         >
           {props.label}
@@ -81,8 +61,18 @@ export default function StyledTextInput(props) {
           value={number}
           style={
             focus
-              ? [styles.inputOnFocus, themeInputTextStyle]
-              : [styles.inputOnBlur, themeInputTextStyle]
+              ? [
+                  styles.inputOnFocus,
+                  colorScheme === "dark"
+                    ? styles.darkTextInput
+                    : styles.lightTextInput,
+                ]
+              : [
+                  styles.inputOnBlur,
+                  colorScheme === "dark"
+                    ? styles.darkTextInput
+                    : styles.lightTextInput,
+                ]
           }
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}

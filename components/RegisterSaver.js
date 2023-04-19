@@ -4,22 +4,18 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Image,
-  ScrollView,
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
-  Pressable,
-  Appearance,
 } from "react-native";
 import * as Font from "expo-font";
-import { Ionicons, Fontisto } from "@expo/vector-icons";
-import { useState, useEffect } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { useState, useEffect, useContext } from "react";
 import StyledTextInput from "./StyledTextInput";
+import { ColorSchemeContext } from "../App";
 
 export default function RegisterSaver({ navigation }) {
-  const colorScheme = Appearance.getColorScheme();
-  const [isDark, setIsDark] = useState(false);
+  const colorScheme = useContext(ColorSchemeContext);
 
   const [focus, setFocus] = useState(false);
   const [number, setNumber] = useState("");
@@ -46,15 +42,6 @@ export default function RegisterSaver({ navigation }) {
     }
   }, [number]);
 
-  useEffect(() => {
-    if (colorScheme === "light") {
-      setIsDark(false);
-    }
-    if (colorScheme === "dark") {
-      setIsDark(true);
-    }
-  }, []);
-
   const [loaded] = Font.useFonts({
     PretendardExtraBold: require("../assets/fonts/Pretendard-ExtraBold.ttf"),
     PretendardSemiBold: require("../assets/fonts/Pretendard-SemiBold.ttf"),
@@ -67,36 +54,43 @@ export default function RegisterSaver({ navigation }) {
     return null;
   }
 
-  const themeMainTextStyle =
-    isDark === false ? styles.lightMainText : styles.darkMainText;
-  const themeSubTextStyle =
-    isDark === false ? styles.lightSubText : styles.darkSubText;
-  const themeSectionBgStyle =
-    isDark === false ? styles.lightSectionBg : styles.darkSectionBg;
-  const themeContainerStyle =
-    isDark === false ? styles.lightContainer : styles.darkContainer;
-  const themeBtnStyle = isDark === false ? styles.lightBtn : styles.darkBtn;
-  const themeInputTextStyle =
-    isDark === false ? styles.lightTextInput : styles.darkTextInput;
-
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={[styles.container, themeContainerStyle]}>
+      <View
+        style={[
+          styles.container,
+          colorScheme === "dark" ? styles.darkContainer : styles.lightContainer,
+        ]}
+      >
         <StatusBar style="auto" />
         <TouchableOpacity
           onPress={() => navigation.goBack()}
-          style={[styles.header, themeContainerStyle]}
+          style={[
+            styles.header,
+            colorScheme === "dark"
+              ? styles.darkContainer
+              : styles.lightContainer,
+          ]}
         >
           <Ionicons
             name="arrow-back-outline"
             size={27}
-            style={[themeMainTextStyle]}
+            style={[
+              colorScheme === "dark"
+                ? styles.darkMainText
+                : styles.lightMainText,
+            ]}
           />
         </TouchableOpacity>
 
         <View style={styles.section}>
           <Text
-            style={[{ ...styles.boldText, fontSize: 23 }, themeMainTextStyle]}
+            style={[
+              { ...styles.boldText, fontSize: 23 },
+              colorScheme === "dark"
+                ? styles.darkMainText
+                : styles.lightMainText,
+            ]}
           >
             구호자를 등록해주세요
           </Text>
@@ -105,7 +99,14 @@ export default function RegisterSaver({ navigation }) {
         <View style={{ marginHorizontal: 20 }}>
           <Text
             style={
-              focus ? styles.FocusFont : [styles.BlurFont, themeSubTextStyle]
+              focus
+                ? styles.FocusFont
+                : [
+                    styles.BlurFont,
+                    colorScheme === "dark"
+                      ? styles.darkSubText
+                      : styles.lightSubText,
+                  ]
             }
           >
             연락처
@@ -119,8 +120,18 @@ export default function RegisterSaver({ navigation }) {
             keyboardType="number-pad"
             style={
               focus
-                ? [styles.inputOnFocus, themeInputTextStyle]
-                : [styles.inputOnBlur, themeInputTextStyle]
+                ? [
+                    styles.inputOnFocus,
+                    colorScheme === "dark"
+                      ? styles.darkTextInput
+                      : styles.lightTextInput,
+                  ]
+                : [
+                    styles.inputOnBlur,
+                    colorScheme === "dark"
+                      ? styles.darkTextInput
+                      : styles.lightTextInput,
+                  ]
             }
             onFocus={() => setFocus(true)}
             onBlur={() => setFocus(false)}

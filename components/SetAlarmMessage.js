@@ -10,24 +10,16 @@ import {
   TextInput,
 } from "react-native";
 import * as Font from "expo-font";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { ColorSchemeContext } from "../App";
 
 export default function SetAlarmMessage({ navigation }) {
-  const colorScheme = Appearance.getColorScheme();
-  const [isDark, setIsDark] = useState(false);
+  const colorScheme = useContext(ColorSchemeContext);
+
   const [number, setNumber] = useState("");
   const [enable, setEnable] = useState(false);
   const [focus, setFocus] = useState(false);
-
-  useEffect(() => {
-    if (colorScheme === "light") {
-      setIsDark(false);
-    }
-    if (colorScheme === "dark") {
-      setIsDark(true);
-    }
-  }, []);
 
   useEffect(() => {
     if (number.length >= 3) {
@@ -36,18 +28,6 @@ export default function SetAlarmMessage({ navigation }) {
       setEnable(false);
     }
   }, [number]);
-
-  const themeMainTextStyle =
-    isDark === false ? styles.lightMainText : styles.darkMainText;
-  const themeSubTextStyle =
-    isDark === false ? styles.lightSubText : styles.darkSubText;
-  const themeSectionBgStyle =
-    isDark === false ? styles.lightSectionBg : styles.darkSectionBg;
-  const themeContainerStyle =
-    isDark === false ? styles.lightContainer : styles.darkContainer;
-  const themeBtnStyle = isDark === false ? styles.lightBtn : styles.darkBtn;
-  const themeInputTextStyle =
-    isDark === false ? styles.lightTextInput : styles.darkTextInput;
 
   const [loaded] = Font.useFonts({
     PretendardExtraBold: require("../assets/fonts/Pretendard-ExtraBold.ttf"),
@@ -63,7 +43,12 @@ export default function SetAlarmMessage({ navigation }) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={[styles.container, themeContainerStyle]}>
+      <View
+        style={[
+          styles.container,
+          colorScheme === "dark" ? styles.darkContainer : styles.lightContainer,
+        ]}
+      >
         <StatusBar style="auto" />
 
         <TouchableOpacity
@@ -73,7 +58,11 @@ export default function SetAlarmMessage({ navigation }) {
           <Ionicons
             name="arrow-back-outline"
             size={27}
-            style={[themeMainTextStyle]}
+            style={[
+              colorScheme === "dark"
+                ? styles.darkMainText
+                : styles.lightMainText,
+            ]}
           />
         </TouchableOpacity>
 
@@ -86,7 +75,9 @@ export default function SetAlarmMessage({ navigation }) {
                 marginTop: 20,
                 marginBottom: 0,
               },
-              themeMainTextStyle,
+              colorScheme === "dark"
+                ? styles.darkMainText
+                : styles.lightMainText,
             ]}
           >
             설정할 알람메시지의 내용을
@@ -99,14 +90,23 @@ export default function SetAlarmMessage({ navigation }) {
                 marginTop: 5,
                 marginBottom: 20,
               },
-              themeMainTextStyle,
+              colorScheme === "dark"
+                ? styles.darkMainText
+                : styles.lightMainText,
             ]}
           >
             아래에 입력해주세요
           </Text>
           <Text
             style={
-              focus ? styles.FocusFont : [styles.BlurFont, themeSubTextStyle]
+              focus
+                ? styles.FocusFont
+                : [
+                    styles.BlurFont,
+                    colorScheme === "dark"
+                      ? styles.darkSubText
+                      : styles.lightSubText,
+                  ]
             }
           >
             내용
@@ -119,8 +119,18 @@ export default function SetAlarmMessage({ navigation }) {
             value={number}
             style={
               focus
-                ? [styles.inputOnFocus, themeInputTextStyle]
-                : [styles.inputOnBlur, themeInputTextStyle]
+                ? [
+                    styles.inputOnFocus,
+                    colorScheme === "dark"
+                      ? styles.darkTextInput
+                      : styles.lightTextInput,
+                  ]
+                : [
+                    styles.inputOnBlur,
+                    colorScheme === "dark"
+                      ? styles.darkTextInput
+                      : styles.lightTextInput,
+                  ]
             }
             onFocus={() => setFocus(true)}
             onBlur={() => setFocus(false)}

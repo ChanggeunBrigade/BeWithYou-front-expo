@@ -10,13 +10,14 @@ import {
   TextInput,
 } from "react-native";
 import * as Font from "expo-font";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import DropDownPicker from "react-native-dropdown-picker";
+import { ColorSchemeContext } from "../App";
 
 export default function SetEmergencyAlarm({ navigation }) {
-  const colorScheme = Appearance.getColorScheme();
-  const [isDark, setIsDark] = useState(false);
+  const colorScheme = useContext(ColorSchemeContext);
+
   const [number, setNumber] = useState("");
   const [enable, setEnable] = useState(false);
   const [focus, setFocus] = useState(false);
@@ -37,33 +38,12 @@ export default function SetEmergencyAlarm({ navigation }) {
   ]);
 
   useEffect(() => {
-    if (colorScheme === "light") {
-      setIsDark(false);
-    }
-    if (colorScheme === "dark") {
-      setIsDark(true);
-    }
-  }, []);
-
-  useEffect(() => {
     if (number.length >= 3) {
       setEnable(true);
     } else {
       setEnable(false);
     }
   }, [number]);
-
-  const themeMainTextStyle =
-    isDark === false ? styles.lightMainText : styles.darkMainText;
-  const themeSubTextStyle =
-    isDark === false ? styles.lightSubText : styles.darkSubText;
-  const themeSectionBgStyle =
-    isDark === false ? styles.lightSectionBg : styles.darkSectionBg;
-  const themeContainerStyle =
-    isDark === false ? styles.lightContainer : styles.darkContainer;
-  const themeBtnStyle = isDark === false ? styles.lightBtn : styles.darkBtn;
-  const themeInputTextStyle =
-    isDark === false ? styles.lightTextInput : styles.darkTextInput;
 
   const [loaded] = Font.useFonts({
     PretendardExtraBold: require("../assets/fonts/Pretendard-ExtraBold.ttf"),
@@ -79,7 +59,12 @@ export default function SetEmergencyAlarm({ navigation }) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={[styles.container, themeContainerStyle]}>
+      <View
+        style={[
+          styles.container,
+          colorScheme === "dark" ? styles.darkContainer : styles.lightContainer,
+        ]}
+      >
         <StatusBar style="auto" />
 
         <TouchableOpacity
@@ -89,7 +74,11 @@ export default function SetEmergencyAlarm({ navigation }) {
           <Ionicons
             name="arrow-back-outline"
             size={27}
-            style={[themeMainTextStyle]}
+            style={[
+              colorScheme === "dark"
+                ? styles.darkMainText
+                : styles.lightMainText,
+            ]}
           />
         </TouchableOpacity>
 
@@ -102,7 +91,9 @@ export default function SetEmergencyAlarm({ navigation }) {
                 marginTop: 20,
                 marginBottom: 0,
               },
-              themeMainTextStyle,
+              colorScheme === "dark"
+                ? styles.darkMainText
+                : styles.lightMainText,
             ]}
           >
             설정할 비상알람 시간 길이를
@@ -115,14 +106,23 @@ export default function SetEmergencyAlarm({ navigation }) {
                 marginTop: 5,
                 marginBottom: 20,
               },
-              themeMainTextStyle,
+              colorScheme === "dark"
+                ? styles.darkMainText
+                : styles.lightMainText,
             ]}
           >
             선택해주세요
           </Text>
           <Text
             style={
-              focus ? styles.FocusFont : [styles.BlurFont, themeSubTextStyle]
+              focus
+                ? styles.FocusFont
+                : [
+                    styles.BlurFont,
+                    colorScheme === "dark"
+                      ? styles.darkSubText
+                      : styles.lightSubText,
+                  ]
             }
           >
             시간
@@ -130,7 +130,7 @@ export default function SetEmergencyAlarm({ navigation }) {
 
           <DropDownPicker
             listMode="MODAL"
-            theme={isDark ? "DARK" : "LIGHT"}
+            theme={colorScheme === "dark" ? "DARK" : "LIGHT"}
             placeholder="시간 설정..."
             open={open}
             value={value}
@@ -138,19 +138,19 @@ export default function SetEmergencyAlarm({ navigation }) {
             setOpen={setOpen}
             setValue={setValue}
             setItems={setItems}
-            style={themeBtnStyle}
+            style={colorScheme === "dark" ? styles.darkBtn : styles.lightBtn}
             textStyle={{
               fontFamily: "PretendardMedium",
               fontSize: 17,
-              color: isDark ? "#ffffff" : "#343d4c",
+              color: colorScheme === "dark" ? "#ffffff" : "#343d4c",
             }}
             dropDownContainerStyle={{
-              backgroundColor: isDark ? "#2c2c34" : "#f1f3f8",
-              borderColor: isDark ? "#2c2c34" : "#f1f3f8",
+              backgroundColor: colorScheme === "dark" ? "#2c2c34" : "#f1f3f8",
+              borderColor: colorScheme === "dark" ? "#2c2c34" : "#f1f3f8",
             }}
             modalAnimationType="slide"
             modalContentContainerStyle={{
-              backgroundColor: isDark ? "#2c2c34" : "#f1f3f8",
+              backgroundColor: colorScheme === "dark" ? "#2c2c34" : "#f1f3f8",
             }}
           />
         </View>

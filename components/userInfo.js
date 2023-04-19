@@ -9,37 +9,14 @@ import {
   Appearance,
 } from "react-native";
 import * as Font from "expo-font";
-import { lightTheme } from "../color";
-import { Ionicons, Fontisto } from "@expo/vector-icons";
-import { useState, useEffect } from "react";
+import { Ionicons } from "@expo/vector-icons";
 import StyledTextInput from "./StyledTextInput";
-import Button from "./Button";
 import PhoneNumberInput from "./PhoneNumperInput";
+import { ColorSchemeContext } from "../App";
+import { useContext } from "react";
 
 export default function UserInfo({ navigation }) {
-  const colorScheme = Appearance.getColorScheme();
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    if (colorScheme === "light") {
-      setIsDark(false);
-    }
-    if (colorScheme === "dark") {
-      setIsDark(true);
-    }
-  }, []);
-
-  const themeMainTextStyle =
-    isDark === false ? styles.lightMainText : styles.darkMainText;
-  const themeSubTextStyle =
-    isDark === false ? styles.lightSubText : styles.darkSubText;
-  const themeSectionBgStyle =
-    isDark === false ? styles.lightSectionBg : styles.darkSectionBg;
-  const themeContainerStyle =
-    isDark === false ? styles.lightContainer : styles.darkContainer;
-  const themeBtnStyle = isDark === false ? styles.lightBtn : styles.darkBtn;
-  const themeInputTextStyle =
-    isDark === false ? styles.lightTextInput : styles.darkTextInput;
+  const colorScheme = useContext(ColorSchemeContext);
 
   const [loaded] = Font.useFonts({
     PretendardExtraBold: require("../assets/fonts/Pretendard-ExtraBold.ttf"),
@@ -55,7 +32,12 @@ export default function UserInfo({ navigation }) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={[styles.container, themeContainerStyle]}>
+      <View
+        style={[
+          styles.container,
+          colorScheme === "dark" ? styles.darkContainer : styles.lightContainer,
+        ]}
+      >
         <StatusBar style="auto" />
 
         <TouchableOpacity
@@ -65,12 +47,18 @@ export default function UserInfo({ navigation }) {
           <Ionicons
             name="arrow-back-outline"
             size={27}
-            style={themeMainTextStyle}
+            style={
+              colorScheme === "dark"
+                ? styles.darkMainText
+                : styles.lightMainText
+            }
           />
           <Text
             style={[
               { ...styles.Text, fontSize: 22, color: "#343d4c" },
-              themeMainTextStyle,
+              colorScheme === "dark"
+                ? styles.darkMainText
+                : styles.lightMainText,
             ]}
           >
             사용자 정보 수정

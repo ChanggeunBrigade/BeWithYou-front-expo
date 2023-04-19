@@ -11,23 +11,15 @@ import {
 import * as Font from "expo-font";
 import { lightTheme } from "../color";
 import { Ionicons, Fontisto } from "@expo/vector-icons";
-import { useState, useEffect } from "react";
+import { useState, useContext } from "react";
+
+import { ColorSchemeContext } from "../App";
 
 export default function Setting({ navigation }) {
-  const colorScheme = Appearance.getColorScheme();
-  const [isDark, setIsDark] = useState(false);
+  const colorScheme = useContext(ColorSchemeContext);
 
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
-
-  useEffect(() => {
-    if (colorScheme === "light") {
-      setIsDark(false);
-    }
-    if (colorScheme === "dark") {
-      setIsDark(true);
-    }
-  }, []);
 
   const [loaded] = Font.useFonts({
     PretendardExtraBold: require("../assets/fonts/Pretendard-ExtraBold.ttf"),
@@ -37,22 +29,17 @@ export default function Setting({ navigation }) {
     PretendardBold: require("../assets/fonts/Pretendard-Bold.ttf"),
   });
 
-  const themeMainTextStyle =
-    isDark === false ? styles.lightMainText : styles.darkMainText;
-  const themeSubTextStyle =
-    isDark === false ? styles.lightSubText : styles.darkSubText;
-  const themeSectionBgStyle =
-    isDark === false ? styles.lightSectionBg : styles.darkSectionBg;
-  const themeContainerStyle =
-    isDark === false ? styles.lightContainer : styles.darkContainer;
-  const themeBtnStyle = isDark === false ? styles.lightBtn : styles.darkBtn;
-
   if (!loaded) {
     return null;
   }
 
   return (
-    <View style={[styles.container, themeContainerStyle]}>
+    <View
+      style={[
+        styles.container,
+        colorScheme === "dark" ? styles.darkContainer : styles.lightContainer,
+      ]}
+    >
       <StatusBar style="auto" />
       <TouchableOpacity
         onPress={() => navigation.goBack()}
@@ -61,15 +48,22 @@ export default function Setting({ navigation }) {
         <Ionicons
           name="arrow-back-outline"
           size={27}
-          style={[themeMainTextStyle]}
+          style={[
+            colorScheme === "dark" ? styles.darkMainText : styles.lightMainText,
+          ]}
         />
-        <Text style={[{ ...styles.Text, fontSize: 22 }, themeMainTextStyle]}>
+        <Text
+          style={[
+            { ...styles.Text, fontSize: 22 },
+            colorScheme === "dark" ? styles.darkMainText : styles.lightMainText,
+          ]}
+        >
           환경설정
         </Text>
       </TouchableOpacity>
 
       <View style={styles.Profile}>
-        {isDark ? (
+        {colorScheme === "dark" ? (
           <Image
             style={styles.profileImage}
             source={require("../assets/img/setting/profileDark2.png")}
@@ -82,11 +76,20 @@ export default function Setting({ navigation }) {
         )}
 
         <View style={styles.profileName}>
-          <Text style={[styles.boldText, themeMainTextStyle]}>이창근</Text>
+          <Text
+            style={[
+              styles.boldText,
+              colorScheme === "dark"
+                ? styles.darkMainText
+                : styles.lightMainText,
+            ]}
+          >
+            이창근
+          </Text>
           <Text
             style={[
               { ...styles.subText, fontSize: 12, marginLeft: 20, marginTop: 3 },
-              themeSubTextStyle,
+              colorScheme === "dark" ? styles.darkSubText : styles.lightSubText,
             ]}
           >
             010-1234-8745
@@ -96,25 +99,41 @@ export default function Setting({ navigation }) {
         <TouchableOpacity
           onPress={() => navigation.navigate("UserInfo")}
           activeOpacity={0.8}
-          style={[styles.tinyButton, themeBtnStyle]}
+          style={[
+            styles.tinyButton,
+            colorScheme === "dark" ? styles.darkBtn : styles.lightBtn,
+          ]}
         >
-          <Text style={[styles.subText, themeSubTextStyle]}>
+          <Text
+            style={[
+              styles.subText,
+              colorScheme === "dark" ? styles.darkSubText : styles.lightSubText,
+            ]}
+          >
             내 정보 수정하기
           </Text>
         </TouchableOpacity>
       </View>
 
-      <View style={[styles.greySpace, themeSectionBgStyle]}></View>
+      <View
+        style={[
+          styles.greySpace,
+          colorScheme === "dark" ? styles.darkSectionBg : styles.lightSectionBg,
+        ]}
+      ></View>
 
       <TouchableOpacity
         onPress={() => navigation.navigate("SetEmergencyAlarm")}
         activeOpacity={0.5}
-        style={[styles.buttonTab, themeContainerStyle]}
+        style={[
+          styles.buttonTab,
+          colorScheme === "dark" ? styles.darkContainer : styles.lightContainer,
+        ]}
       >
         <Text
           style={[
             { ...styles.Text, fontSize: 18, marginLeft: 5, paddingTop: 0 },
-            themeMainTextStyle,
+            colorScheme === "dark" ? styles.darkMainText : styles.lightMainText,
           ]}
         >
           비상알림 시간 설정
@@ -130,12 +149,15 @@ export default function Setting({ navigation }) {
       <TouchableOpacity
         onPress={() => navigation.navigate("SetAlarmMessage")}
         activeOpacity={0.5}
-        style={[styles.buttonTab, themeContainerStyle]}
+        style={[
+          styles.buttonTab,
+          colorScheme === "dark" ? styles.darkContainer : styles.lightContainer,
+        ]}
       >
         <Text
           style={[
             { ...styles.Text, fontSize: 18, marginLeft: 5, paddingTop: 0 },
-            themeMainTextStyle,
+            colorScheme === "dark" ? styles.darkMainText : styles.lightMainText,
           ]}
         >
           알림메시지 설정
@@ -148,11 +170,16 @@ export default function Setting({ navigation }) {
         />
       </TouchableOpacity>
 
-      <View style={[styles.buttonTab, themeContainerStyle]}>
+      <View
+        style={[
+          styles.buttonTab,
+          colorScheme === "dark" ? styles.darkContainer : styles.lightContainer,
+        ]}
+      >
         <Text
           style={[
             { ...styles.Text, fontSize: 18, marginLeft: 5, paddingTop: 0 },
-            themeMainTextStyle,
+            colorScheme === "dark" ? styles.darkMainText : styles.lightMainText,
           ]}
         >
           방해금지 설정

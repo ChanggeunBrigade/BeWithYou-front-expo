@@ -1,44 +1,13 @@
 import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  Appearance,
-  RefreshControl,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import * as Font from "expo-font";
 import { lightTheme, darkTheme } from "../color";
-import { useState, useEffect } from "react";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+
+import { ColorSchemeContext } from "../App";
+import { useContext } from "react";
 
 export default function Home({ navigation }) {
-  const colorScheme = Appearance.getColorScheme();
-
-  const [isDark, setIsDark] = useState(false);
-
-  setDarkMode = () => {
-    if (colorScheme === "light") {
-      setIsDark(false);
-    }
-    if (colorScheme === "dark") {
-      setIsDark(true);
-    }
-  };
-
-  useEffect(() => {
-    setDarkMode();
-    console.log(colorScheme);
-    themeMainTextStyle =
-      isDark === false ? styles.lightMainText : styles.darkMainText;
-    themeSubTextStyle =
-      isDark === false ? styles.lightSubText : styles.darkSubText;
-    themeSectionBgStyle =
-      isDark === false ? styles.lightSectionBg : styles.darkSectionBg;
-    themeContainerStyle =
-      isDark === false ? styles.lightContainer : styles.darkContainer;
-  }, [isDark]);
+  const colorScheme = useContext(ColorSchemeContext);
 
   const [loaded] = Font.useFonts({
     Malang: require("../assets/fonts/MalangmalangB.ttf"),
@@ -54,25 +23,56 @@ export default function Home({ navigation }) {
   }
 
   return (
-    <View style={[styles.container, themeContainerStyle]}>
+    <View
+      style={[
+        styles.container,
+        colorScheme === "dark" ? styles.darkContainer : styles.lightContainer,
+      ]}
+    >
       <StatusBar style="auto" />
 
       <View style={styles.header}>
         <TouchableOpacity activeOpacity={0.8}>
-          <Text style={[styles.mainLogoText, themeMainTextStyle]}>
+          <Text
+            style={[
+              styles.mainLogoText,
+              colorScheme === "dark"
+                ? styles.darkMainText
+                : styles.lightMainText,
+            ]}
+          >
             함께할게.
           </Text>
         </TouchableOpacity>
       </View>
 
-      <View style={[styles.section, themeSectionBgStyle]}>
+      <View
+        style={[
+          styles.section,
+          colorScheme === "dark" ? styles.darkSectionBg : styles.lightSectionBg,
+        ]}
+      >
         <TouchableOpacity
           onPress={() => navigation.navigate("RegisterSaver")}
           activeOpacity={0.6}
-          style={[styles.mainButton, themeContainerStyle]}
+          style={[
+            styles.mainButton,
+            colorScheme === "dark"
+              ? styles.darkContainer
+              : styles.lightContainer,
+          ]}
         >
           <Text style={styles.subText}>구호자</Text>
-          <Text style={[styles.Text, themeMainTextStyle]}>연락처 등록</Text>
+          <Text
+            style={[
+              styles.Text,
+              colorScheme === "dark"
+                ? styles.darkMainText
+                : styles.lightMainText,
+            ]}
+          >
+            연락처 등록
+          </Text>
           <Image
             style={styles.tinyImage}
             source={require("../assets/img/home/contact.png")}
@@ -82,10 +82,24 @@ export default function Home({ navigation }) {
         <TouchableOpacity
           onPress={() => navigation.navigate("Contact")}
           activeOpacity={0.6}
-          style={[styles.mainButton, themeContainerStyle]}
+          style={[
+            styles.mainButton,
+            colorScheme === "dark"
+              ? styles.darkContainer
+              : styles.lightContainer,
+          ]}
         >
           <Text style={styles.subText}>구호자</Text>
-          <Text style={[styles.Text, themeMainTextStyle]}>연락처 관리</Text>
+          <Text
+            style={[
+              styles.Text,
+              colorScheme === "dark"
+                ? styles.darkMainText
+                : styles.lightMainText,
+            ]}
+          >
+            연락처 관리
+          </Text>
           <Image
             style={{ ...styles.tinyImage, marginTop: 32 }}
             source={require("../assets/img/home/contact_config.png")}
@@ -93,13 +107,32 @@ export default function Home({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      <View style={[styles.section, themeSectionBgStyle]}>
+      <View
+        style={[
+          styles.section,
+          colorScheme === "dark" ? styles.darkSectionBg : styles.lightSectionBg,
+        ]}
+      >
         <TouchableOpacity
           activeOpacity={0.6}
-          style={[styles.mainButton, themeContainerStyle]}
+          style={[
+            styles.mainButton,
+            colorScheme === "dark"
+              ? styles.darkContainer
+              : styles.lightContainer,
+          ]}
         >
           <Text style={styles.subText}>최신 버전으로</Text>
-          <Text style={[styles.Text, themeMainTextStyle]}>업데이트</Text>
+          <Text
+            style={[
+              styles.Text,
+              colorScheme === "dark"
+                ? styles.darkMainText
+                : styles.lightMainText,
+            ]}
+          >
+            업데이트
+          </Text>
           <Image
             style={styles.tinyImage}
             source={require("../assets/img/home/update.png")}
@@ -109,10 +142,24 @@ export default function Home({ navigation }) {
         <TouchableOpacity
           onPress={() => navigation.navigate("Setting")}
           activeOpacity={0.6}
-          style={[styles.mainButton, themeContainerStyle]}
+          style={[
+            styles.mainButton,
+            colorScheme === "dark"
+              ? styles.darkContainer
+              : styles.lightContainer,
+          ]}
         >
           <Text style={styles.subText}>쉽고 빠른</Text>
-          <Text style={[styles.Text, themeMainTextStyle]}>환경설정</Text>
+          <Text
+            style={[
+              styles.Text,
+              colorScheme === "dark"
+                ? styles.darkMainText
+                : styles.lightMainText,
+            ]}
+          >
+            환경설정
+          </Text>
           <Image
             style={styles.tinyImage}
             source={require("../assets/img/home/setting.png")}
@@ -120,7 +167,12 @@ export default function Home({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      <View style={[styles.section2, themeSectionBgStyle]}>
+      <View
+        style={[
+          styles.section2,
+          colorScheme === "dark" ? styles.darkSectionBg : styles.lightSectionBg,
+        ]}
+      >
         <TouchableOpacity activeOpacity={0.8} style={styles.mainTestButton}>
           <Text style={{ ...styles.Text2 }}>테스트 문자 발송</Text>
           <Text style={{ ...styles.subText2 }}>
@@ -129,7 +181,12 @@ export default function Home({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      <View style={[styles.footer, themeSectionBgStyle]}></View>
+      <View
+        style={[
+          styles.footer,
+          colorScheme === "dark" ? styles.darkSectionBg : styles.lightSectionBg,
+        ]}
+      ></View>
     </View>
   );
 }

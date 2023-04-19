@@ -91,7 +91,10 @@ export default function PhoneNumberInput(props) {
           }}
           value={number}
           keyboardType="number-pad"
-          style={focus ? styles.inputOnFocus : styles.inputOnBlur}
+          style={[
+            focus ? styles.inputOnFocus : styles.inputOnBlur,
+            themeMainTextStyle,
+          ]}
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
         ></TextInput>

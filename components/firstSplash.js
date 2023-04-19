@@ -4,56 +4,16 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Image,
-  ScrollView,
-  TextInput,
   TouchableWithoutFeedback,
   Keyboard,
-  Pressable,
-  Appearance,
 } from "react-native";
 import * as Font from "expo-font";
-import { Octicons } from "@expo/vector-icons";
-import { useState, useEffect } from "react";
+import { useContext } from "react";
 import Ambulance from "./animations/ambulance";
+import { ColorSchemeContext } from "../App";
 
 export default function FirstSplash({ navigation }) {
-  const colorScheme = Appearance.getColorScheme();
-  const [isDark, setIsDark] = useState(false);
-
-  const [focus, setFocus] = useState(false);
-  const [number, setNumber] = useState("");
-  const [enable, setEnable] = useState(false);
-
-  const handlePress = (number) => {
-    const regex = /^[0-9\b -]{13}$/;
-    if (regex.test(number)) {
-      setEnable(true);
-    }
-    if (!regex.test(number)) {
-      setEnable(false);
-    }
-  };
-
-  useEffect(() => {
-    if (number.length === 10) {
-      setNumber(number.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3"));
-    }
-    if (number.length === 13) {
-      setNumber(
-        number.replace(/-/g, "").replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3")
-      );
-    }
-  }, [number]);
-
-  useEffect(() => {
-    if (colorScheme === "light") {
-      setIsDark(false);
-    }
-    if (colorScheme === "dark") {
-      setIsDark(true);
-    }
-  }, []);
+  const colorScheme = useContext(ColorSchemeContext);
 
   const [loaded] = Font.useFonts({
     Malang: require("../assets/fonts/MalangmalangB.ttf"),
@@ -68,21 +28,14 @@ export default function FirstSplash({ navigation }) {
     return null;
   }
 
-  const themeMainTextStyle =
-    isDark === false ? styles.lightMainText : styles.darkMainText;
-  const themeSubTextStyle =
-    isDark === false ? styles.lightSubText : styles.darkSubText;
-  const themeSectionBgStyle =
-    isDark === false ? styles.lightSectionBg : styles.darkSectionBg;
-  const themeContainerStyle =
-    isDark === false ? styles.lightContainer : styles.darkContainer;
-  const themeBtnStyle = isDark === false ? styles.lightBtn : styles.darkBtn;
-  const themeInputTextStyle =
-    isDark === false ? styles.lightTextInput : styles.darkTextInput;
-
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={[styles.container, themeContainerStyle]}>
+      <View
+        style={[
+          styles.container,
+          colorScheme === "dark" ? styles.darkContainer : styles.lightContainer,
+        ]}
+      >
         <StatusBar style="auto" />
 
         <View style={{ ...styles.section2, marginTop: 100 }}>
@@ -90,7 +43,7 @@ export default function FirstSplash({ navigation }) {
           <Text
             style={[
               { ...styles.subText, fontSize: 15, marginTop: 75 },
-              themeSubTextStyle,
+              colorScheme === "dark" ? styles.darkSubText : styles.lightSubText,
             ]}
           >
             고독사 방지 앱 서비스
@@ -103,7 +56,9 @@ export default function FirstSplash({ navigation }) {
                 marginTop: 5,
                 marginBottom: 10,
               },
-              themeMainTextStyle,
+              colorScheme === "dark"
+                ? styles.darkMainText
+                : styles.lightMainText,
             ]}
           >
             함께할게.
