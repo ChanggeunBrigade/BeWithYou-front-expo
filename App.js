@@ -23,6 +23,7 @@ import { createContext } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function App() {
+  const [complete, setComplete] = useState(false);
   const Stack = createStackNavigator();
 
   const [colorScheme, setColorScheme] = useState(useColorScheme());
@@ -36,8 +37,6 @@ export default function App() {
       subscription.remove();
     };
   }, []);
-
-  let isCompleteReg = true;
 
   const LoadReg = async () => {
     try {
@@ -53,7 +52,14 @@ export default function App() {
       }
       isCompleteReg = userData.userInfo.completeRegister;
       // userInfo 객체 안에 있는 name 속성에 name 상태 변수 값을 저장합니다.
-      console.log(isCompleteReg);
+
+      if (isCompleteReg) {
+        setComplete(true);
+      } else if (!isCompleteReg || "") {
+        setComplete(false);
+      }
+
+      console.log(complete);
       console.log(userData);
     } catch (error) {
       console.log(error);
@@ -62,7 +68,7 @@ export default function App() {
 
   LoadReg();
 
-  if (isCompleteReg === false) {
+  if (complete === false) {
     return (
       <ColorSchemeContext.Provider value={colorScheme}>
         <NavigationContainer
@@ -150,7 +156,7 @@ export default function App() {
     );
   }
 
-  if (isCompleteReg === true) {
+  if (complete === true) {
     return (
       <ColorSchemeContext.Provider value={colorScheme}>
         <NavigationContainer
