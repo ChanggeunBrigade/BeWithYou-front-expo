@@ -17,7 +17,8 @@ import { ColorSchemeContext } from "../App";
 export default function RegisterSaver({ navigation }) {
   const colorScheme = useContext(ColorSchemeContext);
 
-  const [focus, setFocus] = useState(false);
+  const [numberFocus, setNumberFocus] = useState(false);
+  const [nameFocus, setNameFocus] = useState(false);
   const [number, setNumber] = useState("");
   const [enable, setEnable] = useState(false);
 
@@ -94,12 +95,51 @@ export default function RegisterSaver({ navigation }) {
           >
             구호자를 등록해주세요
           </Text>
-          <StyledTextInput label="이름"></StyledTextInput>
+          <View>
+            <Text
+              style={
+                nameFocus
+                  ? styles.FocusFont
+                  : [
+                      styles.BlurFont,
+                      colorScheme === "dark"
+                        ? styles.darkSubText
+                        : styles.lightSubText,
+                    ]
+              }
+            >
+              이름
+            </Text>
+            <TextInput
+              onChangeText={(text) => {
+                setNumber(text);
+              }}
+              value={number}
+              keyboardType="number-pad"
+              style={
+                nameFocus
+                  ? [
+                      styles.inputOnFocus,
+                      colorScheme === "dark"
+                        ? styles.darkTextInput
+                        : styles.lightTextInput,
+                    ]
+                  : [
+                      styles.inputOnBlur,
+                      colorScheme === "dark"
+                        ? styles.darkTextInput
+                        : styles.lightTextInput,
+                    ]
+              }
+              onFocus={() => setNameFocus(true)}
+              onBlur={() => setNameFocus(false)}
+            ></TextInput>
+          </View>
         </View>
         <View style={{ marginHorizontal: 20 }}>
           <Text
             style={
-              focus
+              numberFocus
                 ? styles.FocusFont
                 : [
                     styles.BlurFont,
@@ -119,7 +159,7 @@ export default function RegisterSaver({ navigation }) {
             value={number}
             keyboardType="number-pad"
             style={
-              focus
+              numberFocus
                 ? [
                     styles.inputOnFocus,
                     colorScheme === "dark"
@@ -133,8 +173,8 @@ export default function RegisterSaver({ navigation }) {
                       : styles.lightTextInput,
                   ]
             }
-            onFocus={() => setFocus(true)}
-            onBlur={() => setFocus(false)}
+            onFocus={() => setNumberFocus(true)}
+            onBlur={() => setNumberFocus(false)}
           ></TextInput>
         </View>
         <View style={styles.section}>
