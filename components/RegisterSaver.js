@@ -113,7 +113,7 @@ export default function RegisterSaver({ navigation }) {
             </Text>
             <TextInput
               onChangeText={(text) => {
-                setNumber(text);
+                setName(text);
               }}
               value={number}
               keyboardType="number-pad"

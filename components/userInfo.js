@@ -27,12 +27,12 @@ export default function UserInfo({ navigation }) {
 
   const colorScheme = useContext(ColorSchemeContext);
 
-  const handlePress = (number) => {
+  const handlePress = () => {
     const regex = /^[0-9\b -]{13}$/;
-    if (regex.test(number) && name.length >= 3 && address.length >= 5) {
+    if (name.length >= 3 && address.length > 3 && number.length > 10) {
       setEnable(true);
     }
-    if (!regex.test(number)) {
+    if (number.length === 0 || name.length === 0 || address.length === 0) {
       setEnable(false);
     }
   };
@@ -112,6 +112,7 @@ export default function UserInfo({ navigation }) {
           </Text>
           <TextInput
             onChangeText={(text) => {
+              handlePress();
               setName(text);
             }}
             value={name}
@@ -149,7 +150,7 @@ export default function UserInfo({ navigation }) {
           </Text>
           <TextInput
             onChangeText={(text) => {
-              handlePress(text);
+              handlePress();
               setNumber(text);
             }}
             value={number}
@@ -187,8 +188,9 @@ export default function UserInfo({ navigation }) {
             주소
           </Text>
           <TextInput
-            onChangeText={(address) => {
-              setAddress(address);
+            onChangeText={(text) => {
+              handlePress();
+              setAddress(text);
             }}
             value={address}
             style={
@@ -220,7 +222,7 @@ export default function UserInfo({ navigation }) {
                   fontSize: 18,
                 }}
               >
-                등록
+                수정 완료
               </Text>
             </TouchableOpacity>
           ) : (
