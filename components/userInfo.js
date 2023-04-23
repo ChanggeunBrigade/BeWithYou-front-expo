@@ -7,16 +7,46 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Appearance,
+  TextInput,
 } from "react-native";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import StyledTextInput from "./StyledTextInput";
 import PhoneNumberInput from "./PhoneNumperInput";
 import { ColorSchemeContext } from "../App";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 
 export default function UserInfo({ navigation }) {
+  const [numberFocus, setNumberFocus] = useState(false);
+  const [nameFocus, setNameFocus] = useState(false);
+  const [addressFocus, setAddressFocus] = useState(false);
+  const [number, setNumber] = useState("");
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const [enable, setEnable] = useState(false);
+
   const colorScheme = useContext(ColorSchemeContext);
+
+  const handlePress = (number) => {
+    const regex = /^[0-9\b -]{13}$/;
+    if (regex.test(number) && name.length >= 3 && address.length >= 5) {
+      setEnable(true);
+    }
+    if (!regex.test(number)) {
+      setEnable(false);
+    }
+  };
+
+  useEffect(() => {
+    if (number.length === 10) {
+      setNumber(number.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3"));
+    }
+    if (number.length === 13) {
+      setNumber(
+        number.replace(/-/g, "").replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3")
+      );
+    }
+  }, [number]);
 
   const [loaded] = Font.useFonts({
     PretendardExtraBold: require("../assets/fonts/Pretendard-ExtraBold.ttf"),
@@ -66,9 +96,136 @@ export default function UserInfo({ navigation }) {
         </TouchableOpacity>
 
         <View style={styles.section}>
-          <StyledTextInput label="이름"></StyledTextInput>
-          <StyledTextInput label="주소"></StyledTextInput>
-          <PhoneNumberInput label="연락처"></PhoneNumberInput>
+          <Text
+            style={
+              nameFocus
+                ? styles.FocusFont
+                : [
+                    styles.BlurFont,
+                    colorScheme === "dark"
+                      ? styles.darkSubText
+                      : styles.lightSubText,
+                  ]
+            }
+          >
+            이름
+          </Text>
+          <TextInput
+            onChangeText={(text) => {
+              setName(text);
+            }}
+            value={name}
+            style={
+              nameFocus
+                ? [
+                    styles.inputOnFocus,
+                    colorScheme === "dark"
+                      ? styles.darkTextInput
+                      : styles.lightTextInput,
+                  ]
+                : [
+                    styles.inputOnBlur,
+                    colorScheme === "dark"
+                      ? styles.darkTextInput
+                      : styles.lightTextInput,
+                  ]
+            }
+            onFocus={() => setNameFocus(true)}
+            onBlur={() => setNameFocus(false)}
+          ></TextInput>
+          <Text
+            style={
+              numberFocus
+                ? styles.FocusFont
+                : [
+                    styles.BlurFont,
+                    colorScheme === "dark"
+                      ? styles.darkSubText
+                      : styles.lightSubText,
+                  ]
+            }
+          >
+            연락처
+          </Text>
+          <TextInput
+            onChangeText={(text) => {
+              handlePress(text);
+              setNumber(text);
+            }}
+            value={number}
+            keyboardType="number-pad"
+            style={
+              numberFocus
+                ? [
+                    styles.inputOnFocus,
+                    colorScheme === "dark"
+                      ? styles.darkTextInput
+                      : styles.lightTextInput,
+                  ]
+                : [
+                    styles.inputOnBlur,
+                    colorScheme === "dark"
+                      ? styles.darkTextInput
+                      : styles.lightTextInput,
+                  ]
+            }
+            onFocus={() => setNumberFocus(true)}
+            onBlur={() => setNumberFocus(false)}
+          ></TextInput>
+          <Text
+            style={
+              addressFocus
+                ? styles.FocusFont
+                : [
+                    styles.BlurFont,
+                    colorScheme === "dark"
+                      ? styles.darkSubText
+                      : styles.lightSubText,
+                  ]
+            }
+          >
+            주소
+          </Text>
+          <TextInput
+            onChangeText={(address) => {
+              setAddress(address);
+            }}
+            value={address}
+            style={
+              addressFocus
+                ? [
+                    styles.inputOnFocus,
+                    colorScheme === "dark"
+                      ? styles.darkTextInput
+                      : styles.lightTextInput,
+                  ]
+                : [
+                    styles.inputOnBlur,
+                    colorScheme === "dark"
+                      ? styles.darkTextInput
+                      : styles.lightTextInput,
+                  ]
+            }
+            onFocus={() => setAddressFocus(true)}
+            onBlur={() => setAddressFocus(false)}
+          ></TextInput>
+        </View>
+        <View>
+          {enable ? (
+            <TouchableOpacity activeOpacity={0.8} style={{ ...styles.button }}>
+              <Text
+                style={{
+                  color: "#fff",
+                  fontFamily: "PretendardMedium",
+                  fontSize: 18,
+                }}
+              >
+                등록
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            ""
+          )}
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -119,6 +276,42 @@ const styles = StyleSheet.create({
     letterSpacing: -0.4,
     marginLeft: 10,
     color: "#6a7684",
+  },
+  FocusFont: {
+    fontFamily: "PretendardRegular",
+    color: "#0090ff",
+    letterSpacing: -0.2,
+    paddingBottom: 2,
+    fontSize: 13,
+    marginLeft: 5,
+    marginRight: 10,
+    marginTop: 30,
+  },
+  BlurFont: {
+    fontFamily: "PretendardRegular",
+    color: "#6a7684",
+    letterSpacing: -0.2,
+    paddingBottom: 2,
+    fontSize: 13,
+    marginLeft: 5,
+    marginRight: 10,
+    marginTop: 30,
+  },
+  inputOnFocus: {
+    fontFamily: "PretendardRegular",
+    fontSize: 21,
+    borderBottomColor: "#0090ff",
+    borderBottomWidth: 2,
+    height: 42,
+    marginHorizontal: 5,
+  },
+  inputOnBlur: {
+    fontFamily: "PretendardRegular",
+    fontSize: 21,
+    borderBottomColor: "#b6b6c0",
+    borderBottomWidth: 1,
+    height: 42,
+    marginHorizontal: 5,
   },
   boldText: {
     fontFamily: "PretendardBold",

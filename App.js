@@ -38,6 +38,15 @@ export default function App() {
     };
   }, []);
 
+  const userReset = {
+    userInfo: {
+      name: "",
+      phNum: "",
+      Address: "",
+      completeRegister: false,
+    },
+  };
+
   const LoadReg = async () => {
     try {
       const userInfoData = await AsyncStorage.getItem("userInfoData");
@@ -47,8 +56,8 @@ export default function App() {
       if (userData) {
         console.log("Data 로딩 성공");
       }
-      if (!userData) {
-        userInfo.userInfo = userInfo.userInfo || {};
+      if (Object.keys(userData).length === 0) {
+        userData = userReset;
       }
       isCompleteReg = userData.userInfo.completeRegister;
       // userInfo 객체 안에 있는 name 속성에 name 상태 변수 값을 저장합니다.
@@ -58,6 +67,8 @@ export default function App() {
       } else if (!isCompleteReg || "") {
         setComplete(false);
       }
+
+      await AsyncStorage.setItem("userInfoData", JSON.stringify(userData));
 
       console.log(complete);
       console.log(userData);

@@ -20,6 +20,7 @@ export default function RegisterSaver({ navigation }) {
   const [numberFocus, setNumberFocus] = useState(false);
   const [nameFocus, setNameFocus] = useState(false);
   const [number, setNumber] = useState("");
+  const [name, setName] = useState("");
   const [enable, setEnable] = useState(false);
 
   const handlePress = (number) => {
