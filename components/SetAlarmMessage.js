@@ -52,7 +52,7 @@ export default function SetAlarmMessage({ navigation }) {
         <StatusBar style="auto" />
 
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.pop()}
           style={styles.header}
         >
           <Ionicons
@@ -139,7 +139,7 @@ export default function SetAlarmMessage({ navigation }) {
 
         {enable ? (
           <TouchableOpacity
-            onPress={() => navigation.goBack()}
+            onPress={() => navigation.pop()}
             activeOpacity={0.8}
             style={{ ...styles.button }}
           >

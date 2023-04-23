@@ -40,7 +40,7 @@ export default function ModifySaver({ navigation }) {
         <StatusBar style="auto" />
 
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.pop()}
           style={styles.header}
         >
           <Ionicons

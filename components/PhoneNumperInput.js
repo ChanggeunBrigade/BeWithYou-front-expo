@@ -8,14 +8,12 @@ import {
   Appearance,
 } from "react-native";
 import * as Font from "expo-font";
-import { lightTheme } from "../color";
-import { Ionicons, Fontisto } from "@expo/vector-icons";
-import { useState, useEffect, SetStateAction } from "react";
-import Button from "./Button";
+import { useState, useEffect } from "react";
+import { ColorSchemeContext } from "../App";
+import { useContext } from "react";
 
 export default function PhoneNumberInput(props) {
-  const colorScheme = Appearance.getColorScheme();
-  const [isDark, setIsDark] = useState(false);
+  const colorScheme = useContext(ColorSchemeContext);
 
   const [focus, setFocus] = useState(false);
   const [number, setNumber] = useState("");
@@ -42,15 +40,6 @@ export default function PhoneNumberInput(props) {
     }
   }, [number]);
 
-  useEffect(() => {
-    if (colorScheme === "light") {
-      setIsDark(false);
-    }
-    if (colorScheme === "dark") {
-      setIsDark(true);
-    }
-  }, []);
-
   const [loaded] = Font.useFonts({
     PretendardExtraBold: require("../assets/fonts/Pretendard-ExtraBold.ttf"),
     PretendardSemiBold: require("../assets/fonts/Pretendard-SemiBold.ttf"),
@@ -63,23 +52,25 @@ export default function PhoneNumberInput(props) {
     return null;
   }
 
-  const themeMainTextStyle =
-    isDark === false ? styles.lightMainText : styles.darkMainText;
-  const themeSubTextStyle =
-    isDark === false ? styles.lightSubText : styles.darkSubText;
-  const themeSectionBgStyle =
-    isDark === false ? styles.lightSectionBg : styles.darkSectionBg;
-  const themeContainerStyle =
-    isDark === false ? styles.lightContainer : styles.darkContainer;
-  const themeBtnStyle = isDark === false ? styles.lightBtn : styles.darkBtn;
-
   return (
-    <View style={[styles.container, themeContainerStyle]}>
+    <View
+      style={[
+        styles.container,
+        colorScheme === "dark" ? styles.darkContainer : styles.lightContainer,
+      ]}
+    >
       <StatusBar style="auto" />
       <View>
         <Text
           style={
-            focus ? styles.FocusFont : [styles.BlurFont, themeSubTextStyle]
+            focus
+              ? styles.FocusFont
+              : [
+                  styles.BlurFont,
+                  colorScheme === "dark"
+                    ? styles.darkSubText
+                    : styles.lightSubText,
+                ]
           }
         >
           {props.label}
@@ -93,7 +84,7 @@ export default function PhoneNumberInput(props) {
           keyboardType="number-pad"
           style={[
             focus ? styles.inputOnFocus : styles.inputOnBlur,
-            themeMainTextStyle,
+            colorScheme === "dark" ? styles.darkMainText : styles.lightMainText,
           ]}
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}

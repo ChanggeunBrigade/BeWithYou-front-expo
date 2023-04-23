@@ -7,19 +7,16 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
+  BackHandler,
 } from "react-native";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
-import { useState, useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import { ColorSchemeContext } from "../App";
-import { useContext } from "react";
-import StyledTextInput from "./StyledTextInput";
-import PhoneNumberInput from "./PhoneNumperInput";
-import Button from "./Button";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function UserRegisterNumber({ navigation }) {
   const colorScheme = useContext(ColorSchemeContext);
-
   const [focus, setFocus] = useState(false);
   const [number, setNumber] = useState("");
   const [enable, setEnable] = useState(false);
@@ -53,6 +50,25 @@ export default function UserRegisterNumber({ navigation }) {
     PretendardBold: require("../assets/fonts/Pretendard-Bold.ttf"),
   });
 
+  const phNumSave = async () => {
+    try {
+      const userInfoData = await AsyncStorage.getItem("userInfoData");
+      // AsyncStorage에서 'userInfoData' 키로 저장된 값을 가져옵니다.
+      let userData = userInfoData ? JSON.parse(userInfoData) : {};
+      // 가져온 데이터를 JSON.parse를 통해 객체로 변환합니다. 데이터가 없으면 빈 객체를 생성합니다.
+      if (userData) {
+        console.log("Data 로딩 성공");
+      }
+      userData.userInfo.phNum = number;
+      // userInfo 객체 안에 있는 name 속성에 name 상태 변수 값을 저장합니다.
+      await AsyncStorage.setItem("userInfoData", JSON.stringify(userData));
+      // userInfo 객체를 JSON.stringify를 사용하여 문자열로 변환하고, 'userInfoData' 키로 AsyncStorage에 저장합니다.
+      console.log(userData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   if (!loaded) {
     return null;
   }
@@ -67,7 +83,7 @@ export default function UserRegisterNumber({ navigation }) {
       >
         <StatusBar style="auto" />
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.pop()}
           style={styles.header}
         >
           <Ionicons
@@ -138,7 +154,10 @@ export default function UserRegisterNumber({ navigation }) {
         <View style={styles.section}>
           {enable ? (
             <TouchableOpacity
-              onPress={() => navigation.navigate("userRegisterAddress")}
+              onPress={() => {
+                phNumSave();
+                navigation.push("userRegisterAddress");
+              }}
               activeOpacity={0.8}
               style={{ ...styles.button }}
             >

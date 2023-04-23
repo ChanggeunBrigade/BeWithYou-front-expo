@@ -8,26 +8,72 @@ import {
   Keyboard,
   Appearance,
   TextInput,
+  BackHandler,
 } from "react-native";
 import * as Font from "expo-font";
-import { useState, useEffect } from "react";
 import { ColorSchemeContext } from "../App";
-import { useContext } from "react";
+import { useRoute } from "@react-navigation/native";
+import { useState, useContext, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
+import * as React from "react";
 
 export default function UserRegisterName({ navigation }) {
-  const [number, setNumber] = useState("");
   const [enable, setEnable] = useState(false);
   const [focus, setFocus] = useState(false);
+  const [name, setName] = useState("");
 
   const colorScheme = useContext(ColorSchemeContext);
 
+  const routesParams = useRoute();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        if (routesParams.name === "userRegisterName") {
+          return true;
+        } else {
+          return false;
+        }
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+      return () => {
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+      };
+    }, [])
+  );
+
   useEffect(() => {
-    if (number.length >= 3) {
+    if (name.length >= 3) {
       setEnable(true);
     } else {
       setEnable(false);
     }
-  }, [number]);
+  }, [name]);
+
+  const nameSave = async () => {
+    try {
+      const userInfoData = await AsyncStorage.getItem("userInfoData");
+      // AsyncStorage에서 'userInfoData' 키로 저장된 값을 가져옵니다.
+      let userData = userInfoData ? JSON.parse(userInfoData) : {};
+      // 가져온 데이터를 JSON.parse를 통해 객체로 변환합니다. 데이터가 없으면 빈 객체를 생성합니다.
+      if (userData) {
+        console.log("Data 로딩 성공");
+      }
+      if (!userData) {
+        userInfo.userInfo = userInfo.userInfo || {};
+      }
+      userData.userInfo.name = name;
+      // userInfo 객체 안에 있는 name 속성에 name 상태 변수 값을 저장합니다.
+      await AsyncStorage.setItem("userInfoData", JSON.stringify(userData));
+      // userInfo 객체를 JSON.stringify를 사용하여 문자열로 변환하고, 'userInfoData' 키로 AsyncStorage에 저장합니다.
+      console.log(userData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const [loaded] = Font.useFonts({
     PretendardExtraBold: require("../assets/fonts/Pretendard-ExtraBold.ttf"),
@@ -82,10 +128,10 @@ export default function UserRegisterName({ navigation }) {
             이름
           </Text>
           <TextInput
-            onChangeText={(text) => {
-              setNumber(text);
+            onChangeText={(name) => {
+              setName(name);
             }}
-            value={number}
+            value={name}
             style={
               focus
                 ? [
@@ -108,7 +154,10 @@ export default function UserRegisterName({ navigation }) {
 
         {enable ? (
           <TouchableOpacity
-            onPress={() => navigation.navigate("userRegisterNumber")}
+            onPress={() => {
+              nameSave();
+              navigation.push("userRegisterNumber");
+            }}
             activeOpacity={0.8}
             style={{ ...styles.button }}
           >

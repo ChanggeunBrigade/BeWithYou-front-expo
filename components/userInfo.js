@@ -41,7 +41,7 @@ export default function UserInfo({ navigation }) {
         <StatusBar style="auto" />
 
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.pop()}
           style={styles.header}
         >
           <Ionicons

@@ -64,7 +64,7 @@ export default function RegisterSaver({ navigation }) {
       >
         <StatusBar style="auto" />
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.pop()}
           style={[
             styles.header,
             colorScheme === "dark"

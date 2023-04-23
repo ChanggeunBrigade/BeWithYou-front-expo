@@ -150,13 +150,13 @@ export default function SetEmergencyAlarm({ navigation }) {
             }}
             modalAnimationType="slide"
             modalContentContainerStyle={{
-              backgroundColor: colorScheme === "dark" ? "#2c2c34" : "#f1f3f8",
+              backgroundColor: colorScheme === "dark" ? "#2c2c34" : "#ffffff",
             }}
           />
         </View>
 
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.pop()}
           activeOpacity={0.8}
           style={{ ...styles.button }}
         >

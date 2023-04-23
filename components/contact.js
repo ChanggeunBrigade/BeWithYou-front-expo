@@ -36,10 +36,7 @@ export default function Contact({ navigation }) {
       ]}
     >
       <StatusBar style="auto" />
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={styles.header}
-      >
+      <TouchableOpacity onPress={() => navigation.pop()} style={styles.header}>
         <Ionicons
           name="arrow-back-outline"
           size={27}

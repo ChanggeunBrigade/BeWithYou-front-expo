@@ -179,7 +179,7 @@ export default function Permission({ navigation }) {
 
         <View>
           <TouchableOpacity
-            onPress={() => navigation.navigate("userRegisterName")}
+            onPress={() => navigation.push("userRegisterName")}
             activeOpacity={0.8}
             style={styles.button}
           >

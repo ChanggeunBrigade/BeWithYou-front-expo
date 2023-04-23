@@ -14,21 +14,41 @@ import { Ionicons, Fontisto } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
 import { ColorSchemeContext } from "../App";
 import { useContext } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function UserRegisterAddress({ navigation }) {
   const colorScheme = useContext(ColorSchemeContext);
 
-  const [number, setNumber] = useState("");
+  const [address, setAddress] = useState("");
   const [focus, setFocus] = useState(false);
   const [enable, setEnable] = useState(false);
 
   useEffect(() => {
-    if (number.length >= 5) {
+    if (address.length >= 3) {
       setEnable(true);
     } else {
       setEnable(false);
     }
-  }, [number]);
+  }, [address]);
+
+  const AddressSave = async () => {
+    try {
+      const userInfoData = await AsyncStorage.getItem("userInfoData");
+      // AsyncStorage에서 'userInfoData' 키로 저장된 값을 가져옵니다.
+      let userData = userInfoData ? JSON.parse(userInfoData) : {};
+      // 가져온 데이터를 JSON.parse를 통해 객체로 변환합니다. 데이터가 없으면 빈 객체를 생성합니다.
+      if (userData) {
+        console.log("Data 로딩 성공");
+      }
+      userData.userInfo.Address = address;
+      // userInfo 객체 안에 있는 name 속성에 name 상태 변수 값을 저장합니다.
+      await AsyncStorage.setItem("userInfoData", JSON.stringify(userData));
+      // userInfo 객체를 JSON.stringify를 사용하여 문자열로 변환하고, 'userInfoData' 키로 AsyncStorage에 저장합니다.
+      console.log(userData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const [loaded] = Font.useFonts({
     PretendardExtraBold: require("../assets/fonts/Pretendard-ExtraBold.ttf"),
@@ -52,7 +72,7 @@ export default function UserRegisterAddress({ navigation }) {
       >
         <StatusBar style="auto" />
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.pop()}
           style={styles.header}
         >
           <Ionicons
@@ -94,9 +114,9 @@ export default function UserRegisterAddress({ navigation }) {
             </Text>
             <TextInput
               onChangeText={(text) => {
-                setNumber(text);
+                setAddress(text);
               }}
-              value={number}
+              value={address}
               style={
                 focus
                   ? [
@@ -120,7 +140,10 @@ export default function UserRegisterAddress({ navigation }) {
 
         {enable ? (
           <TouchableOpacity
-            onPress={() => navigation.navigate("CompleteRegister")}
+            onPress={() => {
+              AddressSave();
+              navigation.push("CompleteRegister");
+            }}
             activeOpacity={0.8}
             style={{ ...styles.button }}
           >

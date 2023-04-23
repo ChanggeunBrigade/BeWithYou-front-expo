@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   darkBtn: {
     backgroundColor: "#2c2c34",
   },
-  lightMainText: {
+  lightMainText: {s
     color: "#343d4c",
   },
   darkMainText: {
@@ -53,3 +53,13 @@ const styles = StyleSheet.create({
     color: "#ffffff",
   },
 });
+
+
+표지
+목차
+개발 배경 및 작품 소개
+기술 스택 및 개발 환경 
+작동 원리 설명
+기능 및 특징 설명
+의의 및 기대 효과
+간단한 시연 영상

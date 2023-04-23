@@ -40,7 +40,7 @@ export default function ContactItem(props) {
     >
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("ModifySaver");
+          navigation.push("ModifySaver");
         }}
         activeOpacity={0.7}
         style={[

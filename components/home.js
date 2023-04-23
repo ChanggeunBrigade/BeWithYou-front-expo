@@ -1,12 +1,63 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  BackHandler,
+  Alert,
+  ToastAndroid,
+} from "react-native";
 import * as Font from "expo-font";
-import { lightTheme, darkTheme } from "../color";
+import { lightTheme } from "../color";
 
 import { ColorSchemeContext } from "../App";
 import { useContext } from "react";
+import { useEffect } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
+import * as React from "react";
 
 export default function Home({ navigation }) {
+  const routesParams = useRoute();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        if (routesParams.name === "Home") {
+          if (this.exitApp == undefined || !this.exitApp) {
+            ToastAndroid.show(
+              "한번 더 누르시면 앱을 종료합니다.",
+              ToastAndroid.SHORT
+            );
+            this.exitApp = true;
+
+            this.timeout = setTimeout(
+              () => {
+                this.exitApp = false;
+              },
+              2000 // 2초
+            );
+          } else {
+            clearTimeout(this.timeout);
+
+            BackHandler.exitApp(); // 앱 종료
+          }
+          return true;
+        } else {
+          return false;
+        }
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+      return () => {
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+      };
+    }, [])
+  );
+
   const colorScheme = useContext(ColorSchemeContext);
 
   const [loaded] = Font.useFonts({
@@ -53,7 +104,7 @@ export default function Home({ navigation }) {
         ]}
       >
         <TouchableOpacity
-          onPress={() => navigation.navigate("RegisterSaver")}
+          onPress={() => navigation.push("RegisterSaver")}
           activeOpacity={0.6}
           style={[
             styles.mainButton,
@@ -80,7 +131,7 @@ export default function Home({ navigation }) {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => navigation.navigate("Contact")}
+          onPress={() => navigation.push("Contact")}
           activeOpacity={0.6}
           style={[
             styles.mainButton,
@@ -140,7 +191,7 @@ export default function Home({ navigation }) {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => navigation.navigate("Setting")}
+          onPress={() => navigation.push("Setting")}
           activeOpacity={0.6}
           style={[
             styles.mainButton,

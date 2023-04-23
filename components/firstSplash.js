@@ -66,7 +66,7 @@ export default function FirstSplash({ navigation }) {
         </View>
         <View style={styles.section}>
           <TouchableOpacity
-            onPress={() => navigation.navigate("Permission")}
+            onPress={() => navigation.push("Permission")}
             activeOpacity={0.8}
             style={{ ...styles.button }}
           >

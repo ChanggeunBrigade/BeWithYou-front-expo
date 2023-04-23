@@ -7,11 +7,15 @@ import {
   Image,
   Switch,
   Appearance,
+  BackHandler,
 } from "react-native";
 import * as Font from "expo-font";
 import { lightTheme } from "../color";
 import { Ionicons, Fontisto } from "@expo/vector-icons";
 import { useState, useContext } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
+import * as React from "react";
 
 import { ColorSchemeContext } from "../App";
 
@@ -41,10 +45,7 @@ export default function Setting({ navigation }) {
       ]}
     >
       <StatusBar style="auto" />
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={styles.header}
-      >
+      <TouchableOpacity onPress={() => navigation.pop()} style={styles.header}>
         <Ionicons
           name="arrow-back-outline"
           size={27}
@@ -97,7 +98,7 @@ export default function Setting({ navigation }) {
         </View>
 
         <TouchableOpacity
-          onPress={() => navigation.navigate("UserInfo")}
+          onPress={() => navigation.push("UserInfo")}
           activeOpacity={0.8}
           style={[
             styles.tinyButton,
@@ -123,7 +124,7 @@ export default function Setting({ navigation }) {
       ></View>
 
       <TouchableOpacity
-        onPress={() => navigation.navigate("SetEmergencyAlarm")}
+        onPress={() => navigation.push("SetEmergencyAlarm")}
         activeOpacity={0.5}
         style={[
           styles.buttonTab,
@@ -147,7 +148,7 @@ export default function Setting({ navigation }) {
       </TouchableOpacity>
 
       <TouchableOpacity
-        onPress={() => navigation.navigate("SetAlarmMessage")}
+        onPress={() => navigation.push("SetAlarmMessage")}
         activeOpacity={0.5}
         style={[
           styles.buttonTab,
