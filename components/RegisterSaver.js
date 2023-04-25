@@ -7,12 +7,14 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
+  ToastAndroid,
 } from "react-native";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import { useState, useEffect, useContext } from "react";
 import StyledTextInput from "./StyledTextInput";
 import { ColorSchemeContext } from "../App";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function RegisterSaver({ navigation }) {
   const colorScheme = useContext(ColorSchemeContext);
@@ -23,15 +25,42 @@ export default function RegisterSaver({ navigation }) {
   const [name, setName] = useState("");
   const [enable, setEnable] = useState(false);
 
-  const handlePress = (number) => {
-    const regex = /^[0-9\b -]{13}$/;
-    if (regex.test(number)) {
+  const onChangeName = (payload) => setName(payload);
+  const onChangeNumber = (payload) => setNumber(payload);
+
+  const handleAddContact = async () => {
+    try {
+      const contactData = await AsyncStorage.getItem("contact");
+      let contact = contactData ? JSON.parse(contactData) : {};
+      let idNum = Object.keys(contact).length + 1;
+
+      let newSaver = {
+        [idNum]: {
+          SaverName: name,
+          phNum: number,
+        },
+      };
+
+      const mergedData = Object.assign({}, contact, newSaver);
+      await AsyncStorage.setItem("contact", JSON.stringify(mergedData));
+      console.log("새로운 연락처 추가 완료");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handlePress = () => {
+    if (name.length >= 3 && number.length >= 13) {
       setEnable(true);
     }
-    if (!regex.test(number)) {
+    if (number.length < 13 || name.length === 0) {
       setEnable(false);
     }
   };
+
+  useEffect(() => {
+    handlePress();
+  }, [name, number]);
 
   useEffect(() => {
     if (number.length === 10) {
@@ -42,7 +71,38 @@ export default function RegisterSaver({ navigation }) {
         number.replace(/-/g, "").replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3")
       );
     }
-  }, [number]);
+    handlePress();
+  }, [number, name]);
+
+  const contactReset = {};
+
+  const LoadContact = async () => {
+    try {
+      const contactData = await AsyncStorage.getItem("contact");
+      let contact = contactData ? JSON.parse(contactData) : {};
+      // 가져온 데이터를 JSON.parse를 통해 객체로 변환합니다. 데이터가 없으면 빈 객체를 생성합니다.
+      if (Object.keys(contact).length === 0) {
+        contact = contactReset;
+      }
+      console.log(contact);
+      // userInfo 객체 안에 있는 name 속성에 name 상태 변수 값을 저장합니다.
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    LoadContact();
+  }, []);
+
+  const deleteContact = async () => {
+    try {
+      await AsyncStorage.removeItem("contact");
+      console.log("삭제 완료");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const [loaded] = Font.useFonts({
     PretendardExtraBold: require("../assets/fonts/Pretendard-ExtraBold.ttf"),
@@ -112,11 +172,8 @@ export default function RegisterSaver({ navigation }) {
               이름
             </Text>
             <TextInput
-              onChangeText={(text) => {
-                setName(text);
-              }}
-              value={number}
-              keyboardType="number-pad"
+              onChangeText={onChangeName}
+              value={name}
               style={
                 nameFocus
                   ? [
@@ -153,10 +210,7 @@ export default function RegisterSaver({ navigation }) {
             연락처
           </Text>
           <TextInput
-            onChangeText={(text) => {
-              handlePress(text);
-              setNumber(text);
-            }}
+            onChangeText={onChangeNumber}
             value={number}
             keyboardType="number-pad"
             style={
@@ -180,7 +234,15 @@ export default function RegisterSaver({ navigation }) {
         </View>
         <View style={styles.section}>
           {enable ? (
-            <TouchableOpacity activeOpacity={0.8} style={{ ...styles.button }}>
+            <TouchableOpacity
+              onPress={() => {
+                handleAddContact();
+                navigation.pop();
+                ToastAndroid.show("구호자를 추가하였어요.", ToastAndroid.SHORT);
+              }}
+              activeOpacity={0.8}
+              style={{ ...styles.button }}
+            >
               <Text
                 style={{
                   color: "#fff",

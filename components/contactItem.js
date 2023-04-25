@@ -40,7 +40,7 @@ export default function ContactItem(props) {
     >
       <TouchableOpacity
         onPress={() => {
-          navigation.push("ModifySaver");
+          navigation.navigate("ModifySaver", { id: props.id });
         }}
         activeOpacity={0.7}
         style={[
@@ -93,7 +93,7 @@ export default function ContactItem(props) {
         <Fontisto
           name="angle-right"
           size={11}
-          color="#6a7684"
+          color="#9f9ea4"
           styles={{ marginRight: 100, paddingTop: 100 }}
         />
       </TouchableOpacity>
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     color: "#ffffff",
   },
   lightSubText: {
-    color: "#343d4c",
+    color: "#9f9ea4",
   },
   darkSubText: {
     color: "#c3c3c4",

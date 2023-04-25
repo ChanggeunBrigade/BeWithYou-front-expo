@@ -142,7 +142,7 @@ export default function UserRegisterAddress({ navigation }) {
           <TouchableOpacity
             onPress={() => {
               AddressSave();
-              navigation.push("CompleteRegister");
+              navigation.push("FirstRegisterSaver");
             }}
             activeOpacity={0.8}
             style={{ ...styles.button }}

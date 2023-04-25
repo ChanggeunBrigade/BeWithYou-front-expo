@@ -25,25 +25,21 @@ export default function SetEmergencyAlarm({ navigation }) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
-    { label: "3시간", value: "banana2" },
-    { label: "4시간", value: "banana3" },
-    { label: "5시간", value: "banana5" },
-    { label: "6시간", value: "banana6" },
-    { label: "7시간", value: "banana7" },
-    { label: "8시간", value: "banana8" },
-    { label: "9시간", value: "banana9" },
-    { label: "10시간", value: "banana10" },
-    { label: "11시간", value: "banana11" },
-    { label: "12시간", value: "banana12" },
+    { label: "3시간", value: 3 },
+    { label: "4시간", value: 4 },
+    { label: "5시간", value: 5 },
+    { label: "6시간", value: 6 },
+    { label: "7시간", value: 7 },
+    { label: "8시간", value: 8 },
+    { label: "9시간", value: 9 },
+    { label: "10시간", value: 10 },
+    { label: "11시간", value: 11 },
+    { label: "12시간", value: 12 },
+    { label: "13시간", value: 13 },
+    { label: "14시간", value: 14 },
+    { label: "15시간", value: 15 },
+    { label: "16시간", value: 16 },
   ]);
-
-  useEffect(() => {
-    if (number.length >= 3) {
-      setEnable(true);
-    } else {
-      setEnable(false);
-    }
-  }, [number]);
 
   const [loaded] = Font.useFonts({
     PretendardExtraBold: require("../assets/fonts/Pretendard-ExtraBold.ttf"),

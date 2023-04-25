@@ -4,85 +4,65 @@ import {
   Text,
   View,
   TouchableOpacity,
+  TextInput,
   TouchableWithoutFeedback,
   Keyboard,
-  Appearance,
-  TextInput,
-  ToastAndroid,
 } from "react-native";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
-import StyledTextInput from "./StyledTextInput";
-import PhoneNumberInput from "./PhoneNumperInput";
+import { useState, useEffect, useContext } from "react";
 import { ColorSchemeContext } from "../App";
-import { useContext, useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function UserInfo({ navigation }) {
+export default function FirstRegisterSaver({ navigation }) {
+  const colorScheme = useContext(ColorSchemeContext);
+
   const [numberFocus, setNumberFocus] = useState(false);
   const [nameFocus, setNameFocus] = useState(false);
-  const [addressFocus, setAddressFocus] = useState(false);
   const [number, setNumber] = useState("");
   const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
   const [enable, setEnable] = useState(false);
 
   const onChangeName = (payload) => setName(payload);
   const onChangeNumber = (payload) => setNumber(payload);
-  const onChangeAddress = (payload) => setAddress(payload);
 
-  const setTextInput = async () => {
+  const handleAddContact = async () => {
     try {
-      const userInfoData = await AsyncStorage.getItem("userInfoData");
-      let userData = JSON.parse(userInfoData);
-      setName(userData.userInfo.name);
-      setNumber(userData.userInfo.phNum);
-      setAddress(userData.userInfo.Address);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+      const contactData = await AsyncStorage.getItem("contact");
+      let contact = contactData ? JSON.parse(contactData) : {};
+      let idNum = Object.keys(contact).length + 1;
 
-  useEffect(() => {
-    setTextInput();
-  }, []);
+      let newSaver = {
+        [idNum]: {
+          SaverName: name,
+          phNum: number,
+        },
+      };
 
-  const colorScheme = useContext(ColorSchemeContext);
-
-  const handleModifyUser = async () => {
-    try {
-      const userInfoData = await AsyncStorage.getItem("userInfoData");
-      let userData = JSON.parse(userInfoData);
-
-      userData.userInfo.name = name;
-      userData.userInfo.Address = address;
-      userData.userInfo.phNum = number;
-
-      await AsyncStorage.setItem("userInfoData", JSON.stringify(userData));
-      console.log(userData);
-      console.log("사용자 정보 수정 완료");
+      const mergedData = Object.assign({}, contact, newSaver);
+      await AsyncStorage.setItem("contact", JSON.stringify(mergedData));
+      console.log("새로운 연락처 추가 완료");
     } catch (error) {
       console.log(error);
     }
   };
 
   const handlePress = () => {
-    if (name.length > 0 && address.length > 0 && number.length >= 13) {
+    if (name.length >= 3 && number.length >= 13) {
       setEnable(true);
     }
-    if (number.length < 13 || name.length === 0 || address.length === 0) {
+    if (number.length < 13 || name.length === 0) {
       setEnable(false);
     }
   };
 
   useEffect(() => {
+    handlePress();
+  }, [name, number]);
+
+  useEffect(() => {
     if (number.length === 10) {
       setNumber(number.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3"));
-    }
-    if (number.length === 11) {
-      setNumber(
-        number.replace(/-/g, "").replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3")
-      );
     }
     if (number.length === 13) {
       setNumber(
@@ -90,7 +70,37 @@ export default function UserInfo({ navigation }) {
       );
     }
     handlePress();
-  });
+  }, [number, name]);
+
+  const contactReset = {};
+
+  const LoadContact = async () => {
+    try {
+      const contactData = await AsyncStorage.getItem("contact");
+      let contact = contactData ? JSON.parse(contactData) : {};
+      // 가져온 데이터를 JSON.parse를 통해 객체로 변환합니다. 데이터가 없으면 빈 객체를 생성합니다.
+      if (Object.keys(contact).length === 0) {
+        contact = contactReset;
+      }
+      console.log(contact);
+      // userInfo 객체 안에 있는 name 속성에 name 상태 변수 값을 저장합니다.
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    LoadContact();
+  }, []);
+
+  const deleteContact = async () => {
+    try {
+      await AsyncStorage.removeItem("contact");
+      console.log("삭제 완료");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const [loaded] = Font.useFonts({
     PretendardExtraBold: require("../assets/fonts/Pretendard-ExtraBold.ttf"),
@@ -113,68 +123,76 @@ export default function UserInfo({ navigation }) {
         ]}
       >
         <StatusBar style="auto" />
-
         <TouchableOpacity
           onPress={() => navigation.pop()}
-          style={styles.header}
+          style={[
+            styles.header,
+            colorScheme === "dark"
+              ? styles.darkContainer
+              : styles.lightContainer,
+          ]}
         >
           <Ionicons
             name="arrow-back-outline"
             size={27}
-            style={
+            style={[
               colorScheme === "dark"
                 ? styles.darkMainText
-                : styles.lightMainText
-            }
+                : styles.lightMainText,
+            ]}
           />
+        </TouchableOpacity>
+
+        <View style={styles.section}>
           <Text
             style={[
-              { ...styles.Text, fontSize: 22, color: "#343d4c" },
+              { ...styles.boldText, fontSize: 23 },
               colorScheme === "dark"
                 ? styles.darkMainText
                 : styles.lightMainText,
             ]}
           >
-            사용자 정보 수정
+            구호자를 등록해주세요
           </Text>
-        </TouchableOpacity>
-
-        <View style={styles.section}>
-          <Text
-            style={
-              nameFocus
-                ? styles.FocusFont
-                : [
-                    styles.BlurFont,
-                    colorScheme === "dark"
-                      ? styles.darkSubText
-                      : styles.lightSubText,
-                  ]
-            }
-          >
-            이름
-          </Text>
-          <TextInput
-            onChangeText={onChangeName}
-            value={name}
-            style={
-              nameFocus
-                ? [
-                    styles.inputOnFocus,
-                    colorScheme === "dark"
-                      ? styles.darkTextInput
-                      : styles.lightTextInput,
-                  ]
-                : [
-                    styles.inputOnBlur,
-                    colorScheme === "dark"
-                      ? styles.darkTextInput
-                      : styles.lightTextInput,
-                  ]
-            }
-            onFocus={() => setNameFocus(true)}
-            onBlur={() => setNameFocus(false)}
-          ></TextInput>
+          <View>
+            <Text
+              style={
+                nameFocus
+                  ? styles.FocusFont
+                  : [
+                      styles.BlurFont,
+                      colorScheme === "dark"
+                        ? styles.darkSubText
+                        : styles.lightSubText,
+                    ]
+              }
+            >
+              이름
+            </Text>
+            <TextInput
+              onChangeText={onChangeName}
+              value={name}
+              style={
+                nameFocus
+                  ? [
+                      styles.inputOnFocus,
+                      colorScheme === "dark"
+                        ? styles.darkTextInput
+                        : styles.lightTextInput,
+                    ]
+                  : [
+                      styles.inputOnBlur,
+                      colorScheme === "dark"
+                        ? styles.darkTextInput
+                        : styles.lightTextInput,
+                    ]
+              }
+              onFocus={() => setNameFocus(true)}
+              onBlur={() => setNameFocus(false)}
+            ></TextInput>
+          </View>
+        </View>
+        <View style={{ marginHorizontal: 20 }}>
           <Text
             style={
               numberFocus
@@ -211,50 +229,16 @@ export default function UserInfo({ navigation }) {
             onFocus={() => setNumberFocus(true)}
             onBlur={() => setNumberFocus(false)}
           ></TextInput>
-          <Text
-            style={
-              addressFocus
-                ? styles.FocusFont
-                : [
-                    styles.BlurFont,
-                    colorScheme === "dark"
-                      ? styles.darkSubText
-                      : styles.lightSubText,
-                  ]
-            }
-          >
-            주소
-          </Text>
-          <TextInput
-            onChangeText={onChangeAddress}
-            value={address}
-            style={
-              addressFocus
-                ? [
-                    styles.inputOnFocus,
-                    colorScheme === "dark"
-                      ? styles.darkTextInput
-                      : styles.lightTextInput,
-                  ]
-                : [
-                    styles.inputOnBlur,
-                    colorScheme === "dark"
-                      ? styles.darkTextInput
-                      : styles.lightTextInput,
-                  ]
-            }
-            onFocus={() => setAddressFocus(true)}
-            onBlur={() => setAddressFocus(false)}
-          ></TextInput>
+        </View>
+        <View style={styles.section}>
           {enable ? (
             <TouchableOpacity
               onPress={() => {
-                handleModifyUser();
-                navigation.pop();
-                ToastAndroid.show("수정이 완료되었어요.", ToastAndroid.SHORT);
+                handleAddContact();
+                navigation.push("CompleteRegister");
               }}
               activeOpacity={0.8}
-              style={{ ...styles.button, marginHorizontal: 5, marginTop: 40 }}
+              style={{ ...styles.button }}
             >
               <Text
                 style={{
@@ -263,7 +247,7 @@ export default function UserInfo({ navigation }) {
                   fontSize: 18,
                 }}
               >
-                수정 완료
+                등록
               </Text>
             </TouchableOpacity>
           ) : (
@@ -280,45 +264,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     flex: 1,
     backgroundColor: "#fff",
-  },
-  button: {
-    height: 60,
-    marginBottom: 20,
-    backgroundColor: "#3182f7",
-    borderRadius: 15,
-    marginHorizontal: 20,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  header: {
-    backgroundColor: "fff",
-    paddingHorizontal: 20,
-    alignItems: "center",
-    flexDirection: "row",
-    marginTop: 45,
-    marginBottom: 0,
-  },
-  Profile: {
-    backgroundColor: "fff",
-    paddingHorizontal: 20,
-    alignItems: "center",
-    flexDirection: "row",
-    marginTop: 15,
-    marginBottom: 10,
-  },
-  section: {
-    flex: 1,
-    marginTop: 0,
-    paddingVertical: 8,
-    marginHorizontal: 20,
-    borderRadius: 15,
-  },
-  Text: {
-    fontFamily: "PretendardMedium",
-    fontSize: 23,
-    letterSpacing: -0.4,
-    marginLeft: 10,
-    color: "#6a7684",
   },
   FocusFont: {
     fontFamily: "PretendardRegular",
@@ -356,6 +301,43 @@ const styles = StyleSheet.create({
     height: 42,
     marginHorizontal: 5,
   },
+  button: {
+    height: 60,
+    marginBottom: 20,
+    backgroundColor: "#3182f7",
+    borderRadius: 15,
+    marginTop: 30,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  header: {
+    backgroundColor: "fff",
+    paddingHorizontal: 20,
+    alignItems: "center",
+    flexDirection: "row",
+    marginTop: 45,
+  },
+  Profile: {
+    backgroundColor: "fff",
+    paddingHorizontal: 20,
+    alignItems: "center",
+    flexDirection: "row",
+    marginTop: 15,
+    marginBottom: 10,
+  },
+  section: {
+    marginTop: 15,
+    paddingVertical: 8,
+    marginHorizontal: 20,
+    borderRadius: 15,
+  },
+  Text: {
+    fontFamily: "PretendardMedium",
+    fontSize: 23,
+    letterSpacing: -0.4,
+    marginLeft: 10,
+    color: "#6a7684",
+  },
   boldText: {
     fontFamily: "PretendardBold",
     fontSize: 17,
@@ -371,6 +353,7 @@ const styles = StyleSheet.create({
     letterSpacing: -0.2,
     paddingBottom: 2,
   },
+
   lightContainer: {
     backgroundColor: "#ffffff",
   },

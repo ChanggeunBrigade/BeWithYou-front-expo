@@ -191,7 +191,7 @@ export default function Home({ navigation }) {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => navigation.push("Setting")}
+          onPress={() => navigation.push("Setting", {})}
           activeOpacity={0.6}
           style={[
             styles.mainButton,

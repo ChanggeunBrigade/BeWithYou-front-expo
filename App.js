@@ -16,6 +16,7 @@ import Permission from "./components/permission";
 import SetAlarmMessage from "./components/SetAlarmMessage";
 import SetEmergencyAlarm from "./components/SetEmergencyAlarm";
 import ModifySaver from "./components/modifySaver";
+import FirstRegisterSaver from "./components/firstRegisterSaver";
 
 import { useState, useEffect } from "react";
 import { useColorScheme, Appearance } from "react-native";
@@ -47,17 +48,29 @@ export default function App() {
     },
   };
 
+  const settingReset = {
+    emergencyAlarmTime: "",
+    emergencyMessage: "",
+  };
+
   const LoadReg = async () => {
     try {
       const userInfoData = await AsyncStorage.getItem("userInfoData");
+      const userSettingData = await AsyncStorage.getItem("userSettingData");
       // AsyncStorage에서 'userInfoData' 키로 저장된 값을 가져옵니다.
       let userData = userInfoData ? JSON.parse(userInfoData) : {};
+      let userSetting = userSettingData ? JSON.parse(userSettingData) : {};
       // 가져온 데이터를 JSON.parse를 통해 객체로 변환합니다. 데이터가 없으면 빈 객체를 생성합니다.
-      if (userData) {
-        console.log("Data 로딩 성공");
-      }
       if (Object.keys(userData).length === 0) {
         userData = userReset;
+      }
+
+      if (Object.keys(userSetting).length === 0) {
+        userSetting = settingReset;
+      }
+
+      if (userData && userSetting) {
+        console.log("Data 로딩 성공");
       }
       isCompleteReg = userData.userInfo.completeRegister;
       // userInfo 객체 안에 있는 name 속성에 name 상태 변수 값을 저장합니다.
@@ -69,9 +82,23 @@ export default function App() {
       }
 
       await AsyncStorage.setItem("userInfoData", JSON.stringify(userData));
+      await AsyncStorage.setItem(
+        "userSettingData",
+        JSON.stringify(userSetting)
+      );
 
-      console.log(complete);
       console.log(userData);
+      console.log(userSetting);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const ResetInfo = async () => {
+    try {
+      await AsyncStorage.removeItem("userInfoData");
+      await AsyncStorage.removeItem("contact");
+      console.log("삭제 완료");
     } catch (error) {
       console.log(error);
     }
@@ -115,6 +142,11 @@ export default function App() {
               options={{ headerShown: false }}
               name="userRegisterAddress"
               component={UserRegisterAddress}
+            />
+            <Stack.Screen
+              options={{ headerShown: false }}
+              name="FirstRegisterSaver"
+              component={FirstRegisterSaver}
             />
             <Stack.Screen
               options={{ headerShown: false }}

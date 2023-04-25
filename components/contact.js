@@ -5,16 +5,55 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
+  BackHandler,
 } from "react-native";
 import * as Font from "expo-font";
 import { lightTheme } from "../color";
 import { Ionicons } from "@expo/vector-icons";
 import ContactItem from "./contactItem";
 import { ColorSchemeContext } from "../App";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as React from "react";
 
 export default function Contact({ navigation }) {
   const colorScheme = useContext(ColorSchemeContext);
+  const [contact, setContact] = useState({});
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = async () => {
+        if (routesParams.name === "Contact") {
+          const contactData = await AsyncStorage.getItem("contact");
+          setContact(JSON.parse(contactData));
+        } else {
+          return false;
+        }
+      };
+
+      return async () => {
+        const contactData = await AsyncStorage.getItem("contact");
+        setContact(JSON.parse(contactData));
+      };
+    }, [])
+  );
+
+  const LoadContact = async () => {
+    try {
+      const contactData = await AsyncStorage.getItem("contact");
+      setContact(JSON.parse(contactData));
+
+      // userInfo 객체 안에 있는 name 속성에 name 상태 변수 값을 저장합니다.
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    LoadContact();
+  }, [contact]);
 
   const [loaded] = Font.useFonts({
     PretendardExtraBold: require("../assets/fonts/Pretendard-ExtraBold.ttf"),
@@ -27,7 +66,6 @@ export default function Contact({ navigation }) {
   if (!loaded) {
     return null;
   }
-
   return (
     <ScrollView
       style={[
@@ -85,13 +123,23 @@ export default function Contact({ navigation }) {
               colorScheme === "dark" ? styles.darkSubText : styles.lightSubText,
             ]}
           >
-            연락처를 잘 확인하여 응급메시지가 잘 송신될 수 있도록 해주세요.
+            구호자의 연락처를 클릭하면 정보를 수정하거나 삭제할 수 있어요.
           </Text>
         </View>
       </View>
 
-      <ContactItem name="이창근" phNum="010-4201-2745"></ContactItem>
-      <ContactItem name="오승민" phNum="010-2042-3215"></ContactItem>
+      {Object.keys(contact).map(([key]) =>
+        key ? (
+          <ContactItem
+            key={key}
+            id={Object.keys(contact).slice(0)[key - 1]}
+            name={contact[key].SaverName}
+            phNum={contact[key].phNum}
+          />
+        ) : (
+          <View></View>
+        )
+      )}
     </ScrollView>
   );
 }
