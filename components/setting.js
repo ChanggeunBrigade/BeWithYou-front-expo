@@ -19,9 +19,12 @@ import * as React from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { ColorSchemeContext } from "../App";
+
 export default function Setting({ navigation }) {
   const colorScheme = useContext(ColorSchemeContext);
   const [data, setData] = useState({});
+  const [setting, setSetting] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(false);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -29,6 +32,7 @@ export default function Setting({ navigation }) {
         if (routesParams.name === "Contact") {
           const userInfoData = await AsyncStorage.getItem("userInfoData");
           let userData = JSON.parse(userInfoData);
+
           setData(userData);
         } else {
           return false;
@@ -48,7 +52,10 @@ export default function Setting({ navigation }) {
       const userInfoData = await AsyncStorage.getItem("userInfoData");
       // AsyncStorage에서 'userInfoData' 키로 저장된 값을 가져옵니다.
       let userData = JSON.parse(userInfoData);
-      // 가져온 데이터를 JSON.parse를 통해 객체로 변환합니다. 데이터가 없으면 빈 객체를 생성합니다.
+      // 가져온 데이터를 JSON.parse를 통해 객체로 변환합니다.
+
+      const userSettingData = await AsyncStorage.getItem("userSettingData");
+      let userSetting = JSON.parse(userSettingData);
 
       setData(userData);
 
@@ -58,8 +65,21 @@ export default function Setting({ navigation }) {
     }
   };
 
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+  useEffect(() => {
+    LoadData();
+  }, [data]);
+
+  const toggleSwitch = async () => {
+    const userSettingData = await AsyncStorage.getItem("userSettingData");
+    let userSetting = JSON.parse(userSettingData);
+
+    const updatedValue = !isEnabled;
+    userSetting.doNotDisturb = updatedValue;
+    await AsyncStorage.setItem("userSettingData", JSON.stringify(userSetting));
+
+    setIsEnabled(updatedValue);
+    console.log(updatedValue);
+  };
 
   const [loaded] = Font.useFonts({
     PretendardExtraBold: require("../assets/fonts/Pretendard-ExtraBold.ttf"),
@@ -72,8 +92,6 @@ export default function Setting({ navigation }) {
   if (!loaded) {
     return null;
   }
-
-  LoadData();
 
   if (Object.keys(data).length > 0) {
     return (

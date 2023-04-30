@@ -12,8 +12,6 @@ import {
 } from "react-native";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
-import StyledTextInput from "./StyledTextInput";
-import PhoneNumberInput from "./PhoneNumperInput";
 import { ColorSchemeContext } from "../App";
 import { useContext, useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -213,7 +211,6 @@ export default function ModifySaver({ navigation, route }) {
             <TextInput
               onChangeText={onChangeName}
               value={name}
-              keyboardType="number-pad"
               style={
                 nameFocus
                   ? [

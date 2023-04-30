@@ -13,21 +13,24 @@ import * as Font from "expo-font";
 import { useState, useEffect, useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { ColorSchemeContext } from "../App";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SetAlarmMessage({ navigation }) {
   const colorScheme = useContext(ColorSchemeContext);
 
-  const [number, setNumber] = useState("");
+  const [text, setText] = useState("");
   const [enable, setEnable] = useState(false);
   const [focus, setFocus] = useState(false);
 
+  const onChangeText = (payload) => setText(payload);
+
   useEffect(() => {
-    if (number.length >= 3) {
+    if (text.length >= 3) {
       setEnable(true);
     } else {
       setEnable(false);
     }
-  }, [number]);
+  }, [text]);
 
   const [loaded] = Font.useFonts({
     PretendardExtraBold: require("../assets/fonts/Pretendard-ExtraBold.ttf"),
@@ -40,6 +43,24 @@ export default function SetAlarmMessage({ navigation }) {
   if (!loaded) {
     return null;
   }
+
+  const ModifySetting = async () => {
+    try {
+      const userSettingData = await AsyncStorage.getItem("userSettingData");
+      let userSetting = userSettingData ? JSON.parse(userSettingData) : {};
+      // 가져온 데이터를 JSON.parse를 통해 객체로 변환합니다. 데이터가 없으면 빈 객체를 생성합니다.
+
+      userSetting.emergencyMessage = text;
+      await AsyncStorage.setItem(
+        "userSettingData",
+        JSON.stringify(userSetting)
+      );
+
+      console.log(userSetting);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -112,11 +133,9 @@ export default function SetAlarmMessage({ navigation }) {
             내용
           </Text>
           <TextInput
-            onChangeText={(text) => {
-              setNumber(text);
-            }}
+            onChangeText={onChangeText}
             multiline
-            value={number}
+            value={text}
             style={
               focus
                 ? [
@@ -139,7 +158,10 @@ export default function SetAlarmMessage({ navigation }) {
 
         {enable ? (
           <TouchableOpacity
-            onPress={() => navigation.pop()}
+            onPress={() => {
+              ModifySetting();
+              navigation.pop();
+            }}
             activeOpacity={0.8}
             style={{ ...styles.button }}
           >

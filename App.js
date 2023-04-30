@@ -49,8 +49,10 @@ export default function App() {
   };
 
   const settingReset = {
-    emergencyAlarmTime: "",
-    emergencyMessage: "",
+    emergencyAlarmTime: 12,
+    emergencyMessage:
+      "<긴급메시지 발송> 현재 userName이 일정시간 이상 움직이지 않았어요! 위험상황이니 신속하게 119 등에 연락을 취해주세요.",
+    doNotDisturb: false,
   };
 
   const LoadReg = async () => {

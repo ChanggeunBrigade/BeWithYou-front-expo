@@ -18,6 +18,7 @@ import { useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
 import * as React from "react";
+import * as SMS from "expo-sms";
 
 export default function Home({ navigation }) {
   const routesParams = useRoute();
@@ -166,6 +167,9 @@ export default function Home({ navigation }) {
       >
         <TouchableOpacity
           activeOpacity={0.6}
+          onPress={() => {
+            ToastAndroid.show("현재 앱은 최신 버전입니다.", ToastAndroid.SHORT);
+          }}
           style={[
             styles.mainButton,
             colorScheme === "dark"
@@ -224,7 +228,11 @@ export default function Home({ navigation }) {
           colorScheme === "dark" ? styles.darkSectionBg : styles.lightSectionBg,
         ]}
       >
-        <TouchableOpacity activeOpacity={0.8} style={styles.mainTestButton}>
+        <TouchableOpacity
+          onPress={SendSms}
+          activeOpacity={0.8}
+          style={styles.mainTestButton}
+        >
           <Text style={{ ...styles.Text2 }}>테스트 문자 발송</Text>
           <Text style={{ ...styles.subText2 }}>
             대표 구호자 연락처로 테스트 문자를 발송합니다.

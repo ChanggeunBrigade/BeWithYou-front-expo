@@ -14,6 +14,7 @@ import { useState, useEffect, useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import DropDownPicker from "react-native-dropdown-picker";
 import { ColorSchemeContext } from "../App";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SetEmergencyAlarm({ navigation }) {
   const colorScheme = useContext(ColorSchemeContext);
@@ -52,6 +53,24 @@ export default function SetEmergencyAlarm({ navigation }) {
   if (!loaded) {
     return null;
   }
+
+  const ModifySetting = async () => {
+    try {
+      const userSettingData = await AsyncStorage.getItem("userSettingData");
+      let userSetting = userSettingData ? JSON.parse(userSettingData) : {};
+      // 가져온 데이터를 JSON.parse를 통해 객체로 변환합니다. 데이터가 없으면 빈 객체를 생성합니다.
+
+      userSetting.emergencyAlarmTime = value;
+      await AsyncStorage.setItem(
+        "userSettingData",
+        JSON.stringify(userSetting)
+      );
+
+      console.log(userSetting);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -130,6 +149,9 @@ export default function SetEmergencyAlarm({ navigation }) {
             placeholder="시간 설정..."
             open={open}
             value={value}
+            onChangeValue={(value) => {
+              console.log(value);
+            }}
             items={items}
             setOpen={setOpen}
             setValue={setValue}
@@ -137,8 +159,9 @@ export default function SetEmergencyAlarm({ navigation }) {
             style={colorScheme === "dark" ? styles.darkBtn : styles.lightBtn}
             textStyle={{
               fontFamily: "PretendardMedium",
-              fontSize: 17,
+              fontSize: 19,
               color: colorScheme === "dark" ? "#ffffff" : "#343d4c",
+              paddingBottom: 0,
             }}
             dropDownContainerStyle={{
               backgroundColor: colorScheme === "dark" ? "#2c2c34" : "#f1f3f8",
@@ -146,13 +169,17 @@ export default function SetEmergencyAlarm({ navigation }) {
             }}
             modalAnimationType="slide"
             modalContentContainerStyle={{
-              backgroundColor: colorScheme === "dark" ? "#2c2c34" : "#ffffff",
+              backgroundColor: colorScheme === "dark" ? "#1f1d24" : "#ffffff",
+              borderColor: colorScheme === "dark" ? "#1f1d24" : "#f1f3f8",
             }}
           />
         </View>
 
         <TouchableOpacity
-          onPress={() => navigation.pop()}
+          onPress={() => {
+            ModifySetting();
+            navigation.pop();
+          }}
           activeOpacity={0.8}
           style={{ ...styles.button }}
         >
